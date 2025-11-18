@@ -22,7 +22,7 @@ public class Main {
         World w = p.getWorld();
 
         int amount = 5;
-
+// Hej SEAN PAUL
 
         for(int i = 0; i < amount; i++) {
             int x = r.nextInt(size);
