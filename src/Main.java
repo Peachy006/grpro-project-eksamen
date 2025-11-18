@@ -22,8 +22,7 @@ public class Main {
         World w = p.getWorld();
 
         int amount = 5;
-// Hej SEAN PAUL
-
+//sean was here
         for(int i = 0; i < amount; i++) {
             int x = r.nextInt(size);
             int y = r.nextInt(size);
