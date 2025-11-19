@@ -31,8 +31,11 @@ public class Main {
         Grass grass = new Grass();
         setNonBlockingElement(w, grass, size);
 
-        Rabbit rabbit = new Rabbit();
-        setElement(w, rabbit, size);
+        for(int i = 0; i < 5; i++) {
+            Rabbit rabbit = new Rabbit();
+            setElement(w, rabbit, size);
+        }
+
 
         p.show();
 
