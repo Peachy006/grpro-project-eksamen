@@ -2,6 +2,7 @@ import java.util.Random;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.Program;
+import itumulator.simulator.themeOne.Grass;
 import itumulator.world.Location;
 import itumulator.world.World;
 
@@ -14,6 +15,8 @@ public class Main {
         int display_size = 800;
         Program p = new Program(size, display_size, delay);
         World w = p.getWorld();
+        Grass grass = new Grass();
+        setNonBlockingElement(w,grass,size);
 
 
         p.show();
@@ -23,7 +26,7 @@ public class Main {
         }
     }
 
-    public void setElement(World w, Object o, int size) {
+    public static void setElement(World w, Object o, int size) {
         Random r = new Random();
         int x = r.nextInt(size);
         int y = r.nextInt(size);
@@ -35,7 +38,7 @@ public class Main {
         w.setTile(l, o);
     }
 
-    public void setNonBlockingElement(World w, Object o, int size) {
+    public static void setNonBlockingElement(World w, Object o, int size) {
         Random r = new Random();
         int x = r.nextInt(size);
         int y = r.nextInt(size);
