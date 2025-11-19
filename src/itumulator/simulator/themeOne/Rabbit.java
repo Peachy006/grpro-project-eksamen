@@ -11,10 +11,23 @@ import java.util.*;
 public class Rabbit implements Actor {
 
     int energy = 100;
-
+    int totalEnergy = 100;
+    int age = 1;
+    int dayCount = 0;
     @Override
     public void act(World w) {
 
+        //aging logic
+        dayCount++;
+        if(dayCount >= 5) {
+            dayCount = 0;
+            age++;
+            totalEnergy -= 10;
+            if(age >= 10) {
+                w.delete(this);
+                return;
+            }
+        }
 
 
         Location currentLocation = w.getLocation(this);
@@ -25,11 +38,14 @@ public class Rabbit implements Actor {
             
             if (nonBlockingObject instanceof Grass) {
                 energy += 30;
-                if(energy > 100) energy = 100;
+                if(energy > totalEnergy) energy = totalEnergy;
                 w.delete(nonBlockingObject);
             }
         }
-        
+
+
+
+
         if (energy >= 10) {
             Random r = new Random();
             Set<Location> neighbours = w.getEmptySurroundingTiles(currentLocation);

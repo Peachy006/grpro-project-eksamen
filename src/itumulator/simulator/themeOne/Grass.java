@@ -14,7 +14,7 @@ public class Grass implements Actor, NonBlocking {
     @Override
     public void act(World w) {
         Random r = new Random();
-        if(r.nextBoolean()) {
+        if(r.nextDouble(1) <= 0.2) {
             Set<Location> neighbours = w.getSurroundingTiles(w.getLocation(this));
             ArrayList<Location> neighboursList = new ArrayList<>();
             
