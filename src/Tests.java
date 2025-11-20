@@ -41,23 +41,6 @@ public class Tests {
     }
 
     @Test
-    void KOneOneB() {
-        Grass grass = new Grass();
-        //ensure space all around
-        Location l = new Location(1, 1);
-        w.setTile(l, grass);
-        int counter = 0;
-        while(counter < 1) {
-            p.simulate();
-            Set<Location> neighbours = w.getSurroundingTiles(l);
-            for(int i = 0; i < neighbours.size(); i++) {
-                if(w.getNonBlocking(l) != null) counter++;
-            }
-        }
-        assertTrue(counter > 0);
-    }
-
-    @Test
     void grassSpreadsToAnEmptyNeighbourWithinNSteps() {
         // Arrange
         Location origin = new Location(2, 2);
