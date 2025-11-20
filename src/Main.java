@@ -1,6 +1,7 @@
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.Program;
+import itumulator.simulator.themeOne.Burrow;
 import itumulator.simulator.themeOne.Grass;
 import itumulator.simulator.themeOne.Rabbit;
 import itumulator.world.Location;
@@ -28,13 +29,22 @@ public class Main {
         DisplayInformation rabbitDisplay = new DisplayInformation(Color.RED, "rabbit-small");
         p.setDisplayInformation(Rabbit.class, rabbitDisplay);
 
-        Grass grass = new Grass();
-        setNonBlockingElement(w, grass, size);
 
         for(int i = 0; i < 5; i++) {
             Rabbit rabbit = new Rabbit();
             setElement(w, rabbit, size);
         }
+
+        for(int i = 0; i < 10; i++) {
+            Burrow b = new Burrow();
+            setNonBlockingElement(w, b, size);
+        }
+
+        for(int i = 0; i < 10; i++) {
+            Grass g = new Grass();
+            setNonBlockingElement(w, g, size);
+        }
+
 
 
         p.show();
