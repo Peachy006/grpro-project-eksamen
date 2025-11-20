@@ -119,7 +119,7 @@ public class Rabbit implements Actor {
                 nextLocation = new Location(currentLocation.getX(), burrowLocation.getY());
 
             while(w.getTile(nextLocation) != null) {
-                if()
+
 
                 //hvis x er det samme så ryk til y+-1
                 //hvis y er det samme så ryk til x+-1
