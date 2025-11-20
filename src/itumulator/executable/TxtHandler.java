@@ -77,9 +77,8 @@ public class TxtHandler {
     }
 
     // returns arraylist with spawn for given type
-    public int getTypeAmount(String type) {
-        ArrayList<Integer> list = map.get(type);
-        return list.get(1);
+    public ArrayList<Integer> getTypeList(String type) {
+        return map.get(type);
     }
 
     // returns the range(diffrence between max and min)given for spawn type.
