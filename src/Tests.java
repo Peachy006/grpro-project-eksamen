@@ -35,11 +35,15 @@ public class Tests {
         p.setDisplayInformation(Rabbit.class, rabbitDisplay);
     }
 
+
+    //k1 1a
     @Test
     void KOneOneA() {
         // your assertions here
     }
 
+
+    //k1 1b
     @Test
     void grassSpreadsToAnEmptyNeighbourWithinNSteps() {
         // Arrange

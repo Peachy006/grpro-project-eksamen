@@ -15,6 +15,7 @@ public class Rabbit implements Actor {
     int age = 1;
     int dayCount = 0;
     int IntercourseDelayTimer = 0;
+    ArrayList<Location> PriorityMoves = new ArrayList<>();
 
     private Location burrowLocation = null;
 
@@ -103,18 +104,59 @@ public class Rabbit implements Actor {
             }
         }
 
+        Location nextLocation = null;
+
+        //adding logic for moving rabbits to their burrows
+        if(this.burrowLocation != null && w.isNight()) {
+
+            if(currentLocation.getX() == burrowLocation.getX() && nextLocation == null) {
+                nextLocation = burrowLocation;
+            } else if(currentLocation.getY() == burrowLocation.getY() && nextLocation == null) {
+                nextLocation = burrowLocation;
+            }
+
+            if(nextLocation == null)
+                nextLocation = new Location(currentLocation.getX(), burrowLocation.getY());
+
+            while(w.getTile(nextLocation) != null) {
+                if()
+
+                //hvis x er det samme så ryk til y+-1
+                //hvis y er det samme så ryk til x+-1
+                //else
+                //hvis x er større så ryk til x +-1
+                //hvis x er mindre så ruk til x +-1
+                //så burde det fungere
+            }
+
+            PriorityMoves.add(nextLocation);
+
+
+        }
+
+
+
         //move if the rabbit has the energy
         if (energy >= 10) {
-            Set<Location> neighboursto = w.getEmptySurroundingTiles(currentLocation);
-            if (neighboursto.isEmpty()) return;
-            
-            ArrayList<Location> neighboursList = new ArrayList<>(neighboursto);
-            Location newLocation = neighboursList.get(r.nextInt(neighboursList.size()));
-            w.move(this, newLocation);
+
+            if(!PriorityMoves.isEmpty()) {
+                w.move(this, PriorityMoves.get(0));
+                PriorityMoves.remove(0);
+            } else {
+                Set<Location> neighboursto = w.getEmptySurroundingTiles(currentLocation);
+                if (neighboursto.isEmpty()) return;
+
+                ArrayList<Location> neighboursList = new ArrayList<>(neighboursto);
+                Location newLocation = neighboursList.get(r.nextInt(neighboursList.size()));
+                w.move(this, newLocation);
+            }
+
             energy -= 10;
         } else {
             w.delete(this);
         }
+
+
     }
 }
 
