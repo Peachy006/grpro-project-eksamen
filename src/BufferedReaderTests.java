@@ -1,5 +1,6 @@
 import itumulator.executable.TxtHandler;
 import java.io.IOException;
+import java.util.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +11,7 @@ public class BufferedReaderTests {
 
     @Test
     void t1_1a() {
+
         try {
             txtH = new TxtHandler("resources/Week-1-txt-files/t1-1a.txt");
         } catch (IOException e) {
@@ -18,5 +20,11 @@ public class BufferedReaderTests {
 
         assertNotNull(txtH.getMap());
         System.out.println(txtH.getMap());
+
+
+        ArrayList<Integer> list = txtH.getTypeList("grass");
+        int temp = list[0];
+
+        assertEquals(list[0],3);
     }
 }
