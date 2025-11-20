@@ -1,3 +1,5 @@
+package Test;
+
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.Program;
 import itumulator.simulator.themeOne.Grass;
@@ -9,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.util.Random;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 

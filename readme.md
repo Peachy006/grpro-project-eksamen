@@ -132,7 +132,7 @@ Additionally, section later (*Actor interface and method act*) will give you bet
 
 Below we go through some other tasks together; you should have completed those three tasks before moving on.
 
-## Example: Random Placement of Persons and Associated Tests
+## Example: Random Placement of Persons and Associated Test.Tests
 
 **You should now randomly place 10 persons on the map**. You should also consider what you should do if there’s already something at that spot.
 

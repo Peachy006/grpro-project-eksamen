@@ -1,3 +1,5 @@
+package Test;
+
 import itumulator.executable.TxtHandler;
 import java.io.IOException;
 import java.util.*;
@@ -23,7 +25,7 @@ public class BufferedReaderTests {
 
 
         ArrayList<Integer> list = txtH.getTypeList("grass");
-        int temp = list[0];
+        int temp = list[0];int temp = list[0];
 
         assertEquals(list[0],3);
     }
