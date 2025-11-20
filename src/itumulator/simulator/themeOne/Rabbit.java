@@ -15,7 +15,16 @@ public class Rabbit implements Actor {
     int age = 1;
     int dayCount = 0;
     int IntercourseDelayTimer = 0;
-    
+
+    private Location burrowLocation = null;
+
+
+
+
+    public Location getBurrowLocation() {
+        return burrowLocation;
+    }
+
     @Override
     public void act(World w) {
         Random r = new Random();
@@ -65,7 +74,15 @@ public class Rabbit implements Actor {
             }
         }
 
+        //Digging Burrow logic
 
+            if(this.burrowLocation == null && w.getNonBlocking(w.getLocation(this)) == null) {
+
+                if(r.nextDouble() < 0.15 && !w.containsNonBlocking(currentLocation)) {
+                    Burrow newBurrow = new Burrow();
+                    w.setTile(currentLocation, newBurrow);
+                }
+            }
 
         //move if the rabbit has the energy
         if (energy >= 10) {
