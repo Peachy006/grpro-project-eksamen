@@ -41,20 +41,26 @@ public class Tests {
     }
 
     @Test
-    void KOneOneB() {
-        Grass grass = new Grass();
-        //ensure space all around
-        Location l = new Location(1, 1);
-        w.setTile(l, grass);
-        int counter = 0;
-        while(counter < 1) {
+    void grassSpreadsToAnEmptyNeighbourWithinNSteps() {
+        // Arrange
+        Location origin = new Location(2, 2);
+        w.setTile(origin, new Grass());
+
+
+        //since its 10 % i run a lot of times
+        for (int i = 0; i < 50; i++) {
             p.simulate();
-            Set<Location> neighbours = w.getSurroundingTiles(l);
-            for(int i = 0; i < neighbours.size(); i++) {
-                if(w.getNonBlocking(l) != null) counter++;
+        }
+
+        //check if there is at least one grass
+        boolean grew = false;
+        for (Location n : w.getSurroundingTiles(origin)) {
+            if (w.containsNonBlocking(n) && w.getNonBlocking(n) instanceof Grass) {
+                grew = true;
+                break;
             }
         }
-        assertTrue(counter > 0);
+        assertTrue(grew, "Grass should spread to at least one neighbouring tile within 50 steps");
     }
 
 
