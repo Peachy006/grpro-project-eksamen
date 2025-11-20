@@ -10,7 +10,10 @@ import itumulator.world.World;
 import java.awt.*;
 import java.util.Random;
 
+
+
 public class Main {
+
 
     public static void main(String[] args) {
         Random r = new Random();
@@ -44,6 +47,8 @@ public class Main {
             Grass g = new Grass();
             setNonBlockingElement(w, g, size);
         }
+
+
 
 
 
