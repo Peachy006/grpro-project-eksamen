@@ -20,10 +20,10 @@ public class Rabbit implements Actor {
 
 
 
-
     public Location getBurrowLocation() {
         return burrowLocation;
     }
+
 
     @Override
     public void act(World w) {
@@ -79,10 +79,29 @@ public class Rabbit implements Actor {
             if(this.burrowLocation == null && w.getNonBlocking(w.getLocation(this)) == null) {
 
                 if(r.nextDouble() < 0.15 && !w.containsNonBlocking(currentLocation)) {
-                    Burrow newBurrow = new Burrow();
-                    w.setTile(currentLocation, newBurrow);
+                    Burrow burrow = new Burrow();
+                    w.setTile(currentLocation, burrow);
+                    //Set Rabbit to the Burrow it made
+                    this.burrowLocation = w.getLocation(this);
+                    burrow.addRabbit(this);
                 }
             }
+
+            //Rabbit gets Burrow at night if it doesn't have one
+        if(this.burrowLocation == null && w.isNight()){
+            //Checks for Burrows around Rabbit
+            Set<Location> surroundingBurrows =  w.getSurroundingTiles(w.getLocation(this), w.getSize());
+            for(Location l : surroundingBurrows) {
+                Object Tile = w.getTile(l);
+
+                if(Tile instanceof Burrow) {
+                    Burrow nearBurrow = (Burrow)Tile;
+
+                    this.burrowLocation = w.getLocation(nearBurrow);
+                    nearBurrow.addRabbit(this);
+                }
+            }
+        }
 
         //move if the rabbit has the energy
         if (energy >= 10) {

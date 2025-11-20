@@ -7,11 +7,16 @@ import itumulator.world.NonBlocking;
 import itumulator.world.World;
 
 import java.awt.Color;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class Burrow implements Actor, NonBlocking, DynamicDisplayInformationProvider {
 
     private final String imageKey;
+
+    Set<Rabbit> rabbits = new HashSet<>();
+
 
     public Burrow() {
         // Choose once per instance so each burrow keeps its image
@@ -30,4 +35,9 @@ public class Burrow implements Actor, NonBlocking, DynamicDisplayInformationProv
     public void act(World w) {
 
     }
+
+    public void addRabbit(Rabbit rabbit) {
+        this.rabbits.add(rabbit);
+    }
+
 }
