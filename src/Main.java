@@ -1,6 +1,7 @@
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.Program;
+import itumulator.executable.TxtHandler;
 import itumulator.simulator.themeOne.Burrow;
 import itumulator.simulator.themeOne.Grass;
 import itumulator.simulator.themeOne.Rabbit;
@@ -8,6 +9,7 @@ import itumulator.world.Location;
 import itumulator.world.World;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.Random;
 
 
@@ -16,6 +18,20 @@ public class Main {
 
 
     public static void main(String[] args) {
+
+        //read input
+        String path = "resources/Week-1-txt-files/t1-1a.txt";
+
+        try {
+            TxtHandler reader = new TxtHandler(path);
+        } catch(IOException e) {
+            System.out.println("Failed to load input (IOException)");
+        }
+
+
+
+
+
         Random r = new Random();
         int size = 10;
         int delay = 1000;
