@@ -27,7 +27,7 @@ public class TxtHandler {
         br = new BufferedReader(new FileReader(file));
 
         // Pattern used to identify whether a specific range is given.
-        this.pattern = Pattern.compile("(\\d+)-(\\d+)\\)");
+        this.pattern = Pattern.compile("(\\d+-\\d+)");
 
         //sets map and grabs world size
         this.size = Integer.parseInt(br.readLine()); // first line is always world size
@@ -35,11 +35,12 @@ public class TxtHandler {
         this.file = file;
 
         //temp
-        ArrayList<Integer> list = new ArrayList<>();
+        ArrayList<Integer> list;
         String s;
 
         // while file not empty
         while ((s = br.readLine()) != null) {
+            list = new ArrayList<>();
 
             // A line will always be 2 words
             String[] line = s.split(" ");
@@ -48,7 +49,7 @@ public class TxtHandler {
             Matcher matcher = pattern.matcher(line[1]);
 
             // if pattern matches insert into array list and after hashmap
-            if (matcher.find()) {
+            if (matcher.matches()) {
 
                 // split up the string
                 String[] temp1 = matcher.group(1).split("-");
@@ -81,6 +82,7 @@ public class TxtHandler {
         return map.get(type);
     }
 
+
     // returns the range(diffrence between max and min)given for spawn type.
     public int getRange(String type) {
         ArrayList<Integer> list = map.get(type);
@@ -91,20 +93,5 @@ public class TxtHandler {
         } else {
             return list.getLast() - list.getFirst() + 1;
         }
-    }
-
-    public static void test() {
-        String s = "resources/Week-1-txt-files/t1-1a.txt";
-        TxtHandler TxtH;
-        try  {
-            TxtH = new TxtHandler(s);
-            HashMap<String, ArrayList<Integer>> map = TxtH.getMap();
-            System.out.println(map);
-            System.out.println(TxtH.getSize());
-            System.out.println(TxtH.getRange(type));
-        } catch (IOException e) {
-            System.out.println("Failed to load");
-        }
-
     }
 }
