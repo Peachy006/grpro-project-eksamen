@@ -10,6 +10,8 @@ import itumulator.world.World;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 
@@ -17,23 +19,18 @@ import java.util.Random;
 public class Main {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException{
 
-        //read input
         String path = "resources/Week-1-txt-files/t1-1a.txt";
 
-        try {
-            TxtHandler reader = new TxtHandler(path);
-        } catch(IOException e) {
-            System.out.println("Failed to load input (IOException)");
-        }
 
+        TxtHandler reader = new TxtHandler(path);
 
 
 
 
         Random r = new Random();
-        int size = 10;
+        int size = reader.getSize();
         int delay = 1000;
         int display_size = 800;
         Program p = new Program(size, display_size, delay);
@@ -49,19 +46,54 @@ public class Main {
         p.setDisplayInformation(Rabbit.class, rabbitDisplay);
 
 
-        for(int i = 0; i < 5; i++) {
-            Rabbit rabbit = new Rabbit();
-            setElement(w, rabbit, size);
-        }
+        //read input
 
-        for(int i = 0; i < 10; i++) {
-            Burrow b = new Burrow();
-            setNonBlockingElement(w, b, size);
-        }
 
-        for(int i = 0; i < 10; i++) {
-            Grass g = new Grass();
-            setNonBlockingElement(w, g, size);
+        HashMap<String, ArrayList<Integer>> map = reader.getMap();
+
+        for(String s : map.keySet()) {
+            ArrayList<Integer> list = map.get(s);
+            if(list.size() == 2) {
+                for(int j = list.get(0); j < list.get(1); j++) {
+                    switch(s) {
+                        case("grass"): {
+                            Grass grass = new Grass();
+                            setNonBlockingElement(w,grass,size);
+                            break;
+                        }
+                        case("burrow"): {
+                            Burrow b = new Burrow();
+                            setNonBlockingElement(w,b,size);
+                            break;
+                        }
+                        case("rabbit"): {
+                            Rabbit rab = new Rabbit();
+                            setElement(w,rab,size);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                for(int i = 0; i < list.get(0); i++) {
+                    switch(s) {
+                        case("grass"): {
+                            Grass grass = new Grass();
+                            setNonBlockingElement(w,grass,size);
+                            break;
+                        }
+                        case("burrow"): {
+                            Burrow b = new Burrow();
+                            setNonBlockingElement(w,b,size);
+                            break;
+                        }
+                        case("rabbit"): {
+                            Rabbit rab = new Rabbit();
+                            setElement(w,rab,size);
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
 
