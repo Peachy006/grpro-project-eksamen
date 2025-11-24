@@ -10,7 +10,7 @@ import java.util.regex.*;
 // then no range is defined.
 // buffer reader is used in case we need to read big files
 
-public class TxtHandler {
+public class InputReader {
     BufferedReader br;
     Pattern pattern;
 
@@ -21,7 +21,7 @@ public class TxtHandler {
     HashMap<String, ArrayList<Integer>> map;
 
     //constructr creates HashMap, sets size
-    public TxtHandler(String file) throws IOException {
+    public InputReader(String file) throws IOException {
 
         // Constructor creates a HashMap, sets file name and sets the world size.
         br = new BufferedReader(new FileReader(file));
@@ -40,6 +40,10 @@ public class TxtHandler {
 
         // while file not empty
         while ((s = br.readLine()) != null) {
+            if(s.trim().isEmpty()) {
+                continue;
+            }
+
             list = new ArrayList<>();
 
             // A line will always be 2 words
