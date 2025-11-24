@@ -20,11 +20,19 @@ public class Rabbit implements Actor {
     ArrayList<Location> PriorityMoves = new ArrayList<>();
 
     private Location burrowLocation = null;
+
     /**
-     *
+     * Rabbit behavior is controlled by the Act method.
+     * Energy determines lifespan and reproduction ability.
+     * Rabbits die when energy reaches zero.
+     * totalEnergy is the rabbit's maximum energy.
+     * Standing on grass may restore energy.
+     * Rabbits reproduce if adjacent to another rabbit and are age ≥ 1.
+     * Reproduction triggers a cooldown.
+     * Rabbits age daily, reducing totalEnergy.
+     * Rabbits older than 10 die.
+     * Each rabbit may create one burrow to sleep in at night.
      */
-
-
 
     public Location getBurrowLocation() {
         return burrowLocation;
