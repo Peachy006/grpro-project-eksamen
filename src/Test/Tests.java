@@ -84,6 +84,7 @@ public class Tests {
         int energyStart = rabbit.getEnergy();
         int totalEnergy = 150;
         int expectedEnergyGain = 30;
+        int RabbitMove = 10;
 
         p.simulate();
 
@@ -92,7 +93,9 @@ public class Tests {
 
         assertTrue(finalEnergy > energyStart);
 
-        int expectedFinalEnergy = Math.min(energyStart + expectedEnergyGain, totalEnergy);
+        //Calculates that the Rabbit will move after eating grass
+        int nettoExpectedEnergy = (energyStart + expectedEnergyGain) - RabbitMove;
+        int expectedFinalEnergy = Math.min(nettoExpectedEnergy, totalEnergy);
 
         assertEquals(expectedFinalEnergy, finalEnergy);
         assertFalse(w.containsNonBlocking(testlocation));

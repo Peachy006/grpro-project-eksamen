@@ -21,7 +21,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException{
 
-        String path = "resources/Week-1-txt-files/t1-2a.txt";
+        String path = "resources/Week-1-txt-files/tf1-1.txt";
 
 
         InputReader reader = new InputReader(path);
