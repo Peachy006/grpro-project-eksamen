@@ -137,7 +137,7 @@ public class Rabbit implements Actor {
             }
 
             //move if the rabbit has the energy
-            if (energy >= 10) {
+            if (energy >= 10 && !isBurrowed) {
 
                 if(!PriorityMoves.isEmpty()) {
                     w.move(this, PriorityMoves.get(0));
