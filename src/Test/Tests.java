@@ -69,7 +69,30 @@ public class Tests {
     }
 
 
+    @Test
+    void RabbitGainsEnergyWhenEatingGrass() {
+        Location testlocation = new Location(2, 2);
 
+        Rabbit rabbit = new Rabbit();
+        w.setTile(testlocation, rabbit);
+
+        Grass grass = new Grass();
+        w.setTile(testlocation, grass);
+
+        int energyStart = rabbit.getEnergy();
+        int expectedEnergyGain = 30;
+
+        p.simulate();
+
+
+        int finalEnergy = rabbit.getEnergy();
+        assertTrue(finalEnergy > energyStart);
+        if(energyStart + expectedEnergyGain < finalEnergy) {
+            assertEquals(energyStart + expectedEnergyGain, finalEnergy);
+        }
+
+        assertFalse(w.containsNonBlocking(testlocation) && w.getNonBlocking(testlocation) instanceof Grass);
+    }
 
 
 
