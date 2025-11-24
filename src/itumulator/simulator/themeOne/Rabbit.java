@@ -10,9 +10,9 @@ import java.util.*;
 
 public class Rabbit implements Actor {
 
-    int energy = 100;
+    int energy = 150;
     boolean isBurrowed = false;
-    int totalEnergy = 100;
+    int totalEnergy = 150;
     int age = 1;
     int dayCount = 0;
     int IntercourseDelayTimer = 0;
@@ -154,17 +154,20 @@ public class Rabbit implements Actor {
                 energy -= 10;
             } else {
                 w.delete(this);
+                return;
             }
 
-            //go down the rabbithole (tihi)
-            if(burrowLocation != null && burrowLocation.equals(w.getLocation(this)) && w.isNight()) {
+            //go down the rabbithole
+            if(burrowLocation != null && w.isOnTile(this) && burrowLocation.equals(w.getLocation(this)) && w.isNight()) {
                 isBurrowed = true;
                 aboutToGoDown = true;
             }
         }
 
         if(aboutToGoDown) {
-            w.remove(this);
+            if(w.contains(this)) {
+                w.remove(this);
+            }
             aboutToGoDown = false;
         }
 
