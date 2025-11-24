@@ -54,7 +54,9 @@ public class Main {
         for(String s : map.keySet()) {
             ArrayList<Integer> list = map.get(s);
             if(list.size() == 2) {
-                for(int j = list.get(0); j < list.get(1); j++) {
+                int randomNumberInInterval = r.nextInt(list.get(1)-list.get(0)) + list.get(0);
+
+                for(int j = 0; j < randomNumberInInterval; j++) {
                     switch(s) {
                         case("grass"): {
                             Grass grass = new Grass();
