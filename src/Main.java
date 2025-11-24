@@ -1,7 +1,7 @@
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.Program;
-import itumulator.executable.TxtHandler;
+import itumulator.executable.InputReader;
 import itumulator.simulator.themeOne.Burrow;
 import itumulator.simulator.themeOne.Grass;
 import itumulator.simulator.themeOne.Rabbit;
@@ -21,10 +21,10 @@ public class Main {
 
     public static void main(String[] args) throws IOException{
 
-        String path = "resources/Week-1-txt-files/t1-1a.txt";
+        String path = "resources/Week-1-txt-files/t1-1c.txt";
 
 
-        TxtHandler reader = new TxtHandler(path);
+        InputReader reader = new InputReader(path);
 
 
 
