@@ -10,9 +10,9 @@ import java.util.*;
 
 public class Rabbit implements Actor {
 
-    int energy = 10000;
+    int energy = 100;
     boolean isBurrowed = false;
-    int totalEnergy = 10000;
+    int totalEnergy = 100;
     int age = 1;
     int dayCount = 0;
     int IntercourseDelayTimer = 0;
