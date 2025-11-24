@@ -74,24 +74,29 @@ public class Tests {
         Location testlocation = new Location(2, 2);
 
         Rabbit rabbit = new Rabbit();
+        rabbit.setEnergy(50);
+
         w.setTile(testlocation, rabbit);
 
         Grass grass = new Grass();
         w.setTile(testlocation, grass);
 
         int energyStart = rabbit.getEnergy();
+        int totalEnergy = 150;
         int expectedEnergyGain = 30;
 
         p.simulate();
 
 
         int finalEnergy = rabbit.getEnergy();
-        assertTrue(finalEnergy > energyStart);
-        if(energyStart + expectedEnergyGain < finalEnergy) {
-            assertEquals(energyStart + expectedEnergyGain, finalEnergy);
-        }
 
-        assertFalse(w.containsNonBlocking(testlocation) && w.getNonBlocking(testlocation) instanceof Grass);
+        assertTrue(finalEnergy > energyStart);
+
+        int expectedFinalEnergy = Math.min(energyStart + expectedEnergyGain, totalEnergy);
+
+        assertEquals(expectedFinalEnergy, finalEnergy);
+        assertFalse(w.containsNonBlocking(testlocation));
+
     }
 
 
