@@ -198,4 +198,8 @@ public class Rabbit implements Actor {
     public int getEnergy() {
         return energy;
     }
+
+    public void setEnergy(int energy) {
+        this.energy = energy;
+    }
 }
