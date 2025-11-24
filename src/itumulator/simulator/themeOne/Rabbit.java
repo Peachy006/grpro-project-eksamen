@@ -20,6 +20,9 @@ public class Rabbit implements Actor {
     ArrayList<Location> PriorityMoves = new ArrayList<>();
 
     private Location burrowLocation = null;
+    /**
+     *
+     */
 
 
 
@@ -31,6 +34,8 @@ public class Rabbit implements Actor {
     @Override
     public void act(World w) {
         Random r = new Random();
+
+        //
         if(!isBurrowed) {
             //aging logic
             dayCount++;
@@ -46,13 +51,17 @@ public class Rabbit implements Actor {
 
             //the rabbit will reproduce if another rabbit is nearby
             Set<Location> neighbours = w.getSurroundingTiles(w.getLocation(this));
+
             for(Location l : neighbours) {
                 if(w.getTile(l) != null && w.getTile(l) instanceof Rabbit) {
                     Rabbit tempRabbit = (Rabbit)w.getTile(l);
+
                     if(tempRabbit.age >= 5 && this.age >= 5 && tempRabbit.IntercourseDelayTimer <= 1 && this.IntercourseDelayTimer <= 1) {
                         tempRabbit.IntercourseDelayTimer = 5;
                         this.IntercourseDelayTimer = 5;
+
                         Set<Location> tempNeighbours = w.getEmptySurroundingTiles(w.getLocation(this));
+
                         if(!tempNeighbours.isEmpty()) {
                             ArrayList<Location> tempNeighboursList = new ArrayList<>(tempNeighbours);
                             w.setTile(tempNeighboursList.get(r.nextInt(tempNeighboursList.size())), new Rabbit());
@@ -77,7 +86,6 @@ public class Rabbit implements Actor {
             }
 
             //Digging Burrow logic
-
             if(this.burrowLocation == null && w.getNonBlocking(w.getLocation(this)) == null) {
 
                 if(r.nextDouble() < 0.15 && !w.containsNonBlocking(currentLocation)) {
@@ -177,11 +185,9 @@ public class Rabbit implements Actor {
                 isBurrowed = false;
             }
         }
+    }
 
-
-
-
-
-
+    public int getEnergy() {
+        return energy;
     }
 }
