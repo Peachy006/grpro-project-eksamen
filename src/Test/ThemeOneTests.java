@@ -2,6 +2,7 @@ package Test;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.Program;
+import itumulator.simulator.themeOne.Burrow;
 import itumulator.simulator.themeOne.Grass;
 import itumulator.simulator.themeOne.Rabbit;
 import itumulator.world.Location;
@@ -173,6 +174,96 @@ public class ThemeOneTests {
         assertTrue(PercentageOutsideDeviation < 0.05);
     }
 
+    @Test
+
+    void DoesRabbitCreateBurrow(){
+        Location start = new Location(2, 2);
+        Rabbit rabbit = new Rabbit();
+        //Sets energy so Rabbit doesn't die and the test fails
+        rabbit.setEnergy(5000);
+
+        w.setTile(start, rabbit);
+        Location finalBurrowLocation = null;
+        //Simulates 100 steps and stops if Rabbit creates a Burrow
+        for(int i = 0; i < 100 ; i++) {
+            p.simulate();
+
+            if(rabbit.getBurrowLocation() != null) {
+                finalBurrowLocation = rabbit.getBurrowLocation();
+                break;
+            }
+        }
+        //Check if Rabbit knows Location of Burrow
+        boolean rabbitKnowsBurrow = finalBurrowLocation != null;
+        assertTrue(rabbitKnowsBurrow);
+
+        //Check Burrow on the location Rabbit gives
+        if(rabbitKnowsBurrow){
+            boolean burrowOnMap = w.containsNonBlocking(finalBurrowLocation) && w.getNonBlocking(finalBurrowLocation) instanceof Burrow;
+            assertTrue(burrowOnMap);
+
+        //Checks if Burrow has registered Rabbit
+            Burrow burrowIsCreated = (Burrow)  w.getNonBlocking(finalBurrowLocation);
+            assertTrue(burrowIsCreated.rabbits.contains(rabbit));
+
+        }
+    }
+
+    @Test
+    void DoesRabbitReproduce() {
+        Location locationA = new Location(2, 2);
+        Location locationB = new Location(2, 3);
+        Location locationC = new Location(3, 3);
+
+        Rabbit rabbitA = new Rabbit();
+        Rabbit rabbitB = new Rabbit();
+
+        rabbitA.setAge(5);
+        rabbitB.setAge(5);
+
+        w.setTile(locationA, rabbitA);
+        w.setTile(locationB, rabbitB);
+
+        assertTrue(w.isTileEmpty(locationC));
+
+        int startRabbitCount = 2;
+
+        p.simulate();
+
+        int endRabbitCount = 0;
+
+        for (int x = 0; x < size; x++){
+            for (int y = 0; y < size; y++){
+                Object object = w.getTile(new Location(x, y));
+                if(object instanceof Rabbit) {
+                    endRabbitCount ++;
+                }
+            }
+        }
+
+        assertEquals(startRabbitCount + 1, endRabbitCount);
+
+        //We can expand the test to see if their cd-Timer does go on cd
+    }
+
+
+    @Test
+    void DoesRabbitDieWhenAging() {
+        Location startLocation = new Location(2, 2);
+        Rabbit rabbit = new Rabbit();
+
+        rabbit.setAge(9);
+        rabbit.setDayCount(4);
+
+        w.setTile(startLocation, rabbit);
+        assertTrue(w.contains(rabbit));
+
+        p.simulate();
+
+        assertFalse(w.contains(rabbit));
+        assertTrue(w.isTileEmpty(startLocation));
+
+    }
     // --- Helper Methods ---
 
     public static void setElement(World w, Object o, int size) {
