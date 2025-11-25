@@ -15,7 +15,7 @@ public class Burrow implements Actor, NonBlocking, DynamicDisplayInformationProv
 
     private final String imageKey;
 
-    Set<Rabbit> rabbits = new HashSet<>();
+    public Set<Rabbit> rabbits = new HashSet<>();
 
 
     public Burrow() {

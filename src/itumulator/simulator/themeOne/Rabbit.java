@@ -202,4 +202,12 @@ public class Rabbit implements Actor {
     public void setEnergy(int energy) {
         this.energy = energy;
     }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setDayCount(int dayCount) {
+        this.dayCount = dayCount;
+    }
 }
