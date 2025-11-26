@@ -2,13 +2,14 @@ package itumulator.simulator.themeOne;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.simulator.Actor;
+import itumulator.simulator.Animal;
 import itumulator.world.World;
 import itumulator.world.Location;
 
 import java.awt.*;
 import java.util.*;
 
-public class Rabbit implements Actor {
+public class Rabbit extends Animal implements Actor {
 
     int energy = 150;
     boolean isBurrowed = false;
@@ -17,22 +18,9 @@ public class Rabbit implements Actor {
     int dayCount = 0;
     int IntercourseDelayTimer = 0;
     boolean aboutToGoDown = false;
-    ArrayList<Location> PriorityMoves = new ArrayList<>();
 
     private Location burrowLocation = null;
 
-    /**
-     * Rabbit behavior is controlled by the Act method.
-     * Energy determines lifespan and reproduction ability.
-     * Rabbits die when energy reaches zero.
-     * totalEnergy is the rabbit's maximum energy.
-     * Standing on grass may restore energy.
-     * Rabbits reproduce if adjacent to another rabbit and are age ≥ 1.
-     * Reproduction triggers a cooldown.
-     * Rabbits age daily, reducing totalEnergy.
-     * Rabbits older than 10 die.
-     * Each rabbit may create one burrow to sleep in at night.
-     */
 
     public Location getBurrowLocation() {
         return burrowLocation;
@@ -41,6 +29,7 @@ public class Rabbit implements Actor {
 
     @Override
     public void act(World w) {
+        boolean hasMoved = false;
         Random r = new Random();
 
         //
@@ -107,7 +96,7 @@ public class Rabbit implements Actor {
 
             //Rabbit gets Burrow at night if it doesn't have one
             if(this.burrowLocation == null && w.isNight()){
-                //Checks for Burrows around Rabbit
+                //Checks for Burrows
                 Set<Location> surroundingBurrows =  w.getSurroundingTiles(w.getLocation(this), w.getSize());
                 for(Location l : surroundingBurrows) {
                     Object Tile = w.getTile(l);
@@ -121,50 +110,22 @@ public class Rabbit implements Actor {
                 }
             }
 
-            Location nextLocation = null;
-
-            //adding logic for moving rabbits to their burrows
-            if(this.burrowLocation != null && w.isNight()) {
-                //Get empty surrounding tiles
-                Set<Location> emptyNeighbours = w.getEmptySurroundingTiles(currentLocation);
-
-                if(!emptyNeighbours.isEmpty()) {
-                    //find the tile closest to the burrow
-                    Location bestMove = null;
-                    double shortestDistance = Double.MAX_VALUE;
-
-                    for(Location candidate : emptyNeighbours) {
-                        // alculate distance to burrow (this is done using euclidance
-                        int dx = candidate.getX() - burrowLocation.getX();
-                        int dy = candidate.getY() - burrowLocation.getY();
-                        double distance = Math.sqrt(dx * dx + dy * dy);
-
-                        if(distance < shortestDistance) {
-                            shortestDistance = distance;
-                            bestMove = candidate;
-                        }
-                    }
-
-                    // Add the best move to PriorityMoves if we found one
-                    if(bestMove != null) {
-                        PriorityMoves.add(bestMove);
-                    }
-                }
-            }
 
             //move if the rabbit has the energy
             if (energy >= 10 && !isBurrowed) {
-
-                if(!PriorityMoves.isEmpty()) {
-                    w.move(this, PriorityMoves.get(0));
-                    PriorityMoves.remove(0);
+                
+                // If rabbit has a burrow and its night, move towards it
+                if(this.burrowLocation != null && w.isNight()) {
+                    if(!moveTowards(w, currentLocation, burrowLocation)) {
+                        // if its false its because it for some reason could not move towards the burrow, it will then move randomly
+                        if(!moveRandomly(w, currentLocation)) {
+                            return;
+                        }
+                    }
                 } else {
-                    Set<Location> neighboursto = w.getEmptySurroundingTiles(currentLocation);
-                    if (neighboursto.isEmpty()) return;
-
-                    ArrayList<Location> neighboursList = new ArrayList<>(neighboursto);
-                    Location newLocation = neighboursList.get(r.nextInt(neighboursList.size()));
-                    w.move(this, newLocation);
+                    if(!moveRandomly(w, currentLocation)) {
+                        return;
+                    }
                 }
 
                 energy -= 10;
@@ -172,6 +133,8 @@ public class Rabbit implements Actor {
                 w.delete(this);
                 return;
             }
+
+
 
             //go down the rabbithole
             if(burrowLocation != null && w.isOnTile(this) && burrowLocation.equals(w.getLocation(this)) && w.isNight()) {
