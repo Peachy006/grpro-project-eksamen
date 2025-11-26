@@ -1,24 +1,28 @@
 package itumulator.executable;
 
+import itumulator.world.Location;
+import itumulator.world.World;
+
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.regex.*;
 
-// TxtHandler takes a text file (provided as a String filename) and stores the world size,
+// InputReader takes a text file (provided as a String filename) and stores the world size,
 // along with a HashMap where each type (stored as a String) is linked to an ArrayList
 // representing the spawn range for that type. If the list contains only one index,
 // then no range is defined.
+// if a object has a spawn location that will be stored as well
 // buffer reader is used in case we need to read big files
 
 public class InputReader {
-    BufferedReader br;
-    Pattern pattern;
+    private BufferedReader br;
+    private String file;
 
-    //Object Type, World Size and said HashMap
-    int size;
-    static String type;
-    String file;
-    HashMap<String, ArrayList<Integer>> map;
+    private int size;
+    private HashMap<String, ArrayList<Integer>> map;
+
+    private HashMap<String, Location> spawnLocation;
 
     //constructr creates HashMap, sets size
     public InputReader(String file) throws IOException {
@@ -27,7 +31,7 @@ public class InputReader {
         br = new BufferedReader(new FileReader(file));
 
         // Pattern used to identify whether a specific range is given.
-        this.pattern = Pattern.compile("(\\d+-\\d+)");
+        Pattern pattern = Pattern.compile("(\\d+-\\d+)\\s(\\(\\d+,\\d+\\))");
 
         //sets map and grabs world size
         this.size = Integer.parseInt(br.readLine()); // first line is always world size
@@ -58,6 +62,15 @@ public class InputReader {
                 // split up the string
                 String[] temp1 = matcher.group(1).split("-");
 
+                // if object has a spawn location
+                if (matcher.group(2) != null) {
+                    String[] temp2 = matcher.group(2).split("[,()]");
+                    Location l =  new Location(Integer.parseInt(temp1[0]), Integer.parseInt(temp1[1]));
+                    
+                    this.spawnLocation = new HashMap<String,Location>();
+                    spawnLocation.put(line[0],l);
+                }
+
                 // insert each range number as an int in the array
                 list.add(Integer.parseInt(temp1[0]));
                 list.add(Integer.parseInt(temp1[1]));
@@ -73,6 +86,7 @@ public class InputReader {
         br.close();
     }
 
+    //-----------Methods----------------------------
     public int getSize() {
         return size;
     }
@@ -86,16 +100,11 @@ public class InputReader {
         return map.get(type);
     }
 
+    public boolean hasSpawnLocation() {
+        return spawnLocation != null;
+    }
 
-    // returns the range(diffrence between max and min)given for spawn type.
-    public int getRange(String type) {
-        ArrayList<Integer> list = map.get(type);
-
-        // if there is not a range return zero else return range.
-        if (list.size() == 1) {
-            return 0;
-        } else {
-            return list.getLast() - list.getFirst() + 1;
-        }
+    public Location getSpawnLocation(String Object) {
+        return spawnLocation.get(Object);
     }
 }
