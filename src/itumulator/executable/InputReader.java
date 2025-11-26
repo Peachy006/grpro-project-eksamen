@@ -27,10 +27,10 @@ public class InputReader {
     //constructr creates HashMap, sets size
     public InputReader(String file) throws IOException {
 
-        // Constructor creates a HashMap, sets file name and sets the world size.
+        //constructor creates a map, sets file name and sets the world size
         br = new BufferedReader(new FileReader(file));
 
-        // Pattern used to identify whether a specific range is given.
+        //pattern used to identify whether a specific range is given.
         Pattern pattern = Pattern.compile("(\\d+-\\d+)\\s(\\(\\d+,\\d+\\))");
 
         //sets map and grabs world size

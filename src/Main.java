@@ -1,10 +1,9 @@
 
-import itumulator.executable.DisplayInformation;
-import itumulator.executable.Program;
-import itumulator.executable.InputReader;
+import itumulator.executable.*;
 import itumulator.simulator.themeOne.Burrow;
 import itumulator.simulator.themeOne.Grass;
 import itumulator.simulator.themeOne.Rabbit;
+import itumulator.simulator.themeTwo.Wolf;
 import itumulator.world.Location;
 import itumulator.world.World;
 
@@ -21,11 +20,12 @@ public class Main {
 
     public static void main(String[] args) throws IOException{
 
-        String path = "resources/Week-1-txt-files/tf1-1.txt";
+        String path = "resources/week-2/t2-1c.txt";
 
 
-        InputReader reader = new InputReader(path);
+        TestInputReaderExample reader = new TestInputReaderExample(path);
 
+        HashMap<String, EntityConfig> configMap = reader.getConfigMap();
 
 
 
@@ -48,58 +48,23 @@ public class Main {
 
         //read input
 
+        for(String type : configMap.keySet()) {
+            EntityConfig information = configMap.get(type);
+            ArrayList<Integer> listOfAmount = information.getSpawnAmount();
 
-        HashMap<String, ArrayList<Integer>> map = reader.getMap();
+            int spawnCount;
 
-        for(String s : map.keySet()) {
-            ArrayList<Integer> list = map.get(s);
-            if(list.size() == 2) {
-                int randomNumberInInterval = r.nextInt(list.get(1)-list.get(0)) + list.get(0);
-
-                for(int j = 0; j < randomNumberInInterval; j++) {
-                    switch(s) {
-                        case("grass"): {
-                            Grass grass = new Grass();
-                            setNonBlockingElement(w,grass,size);
-                            break;
-                        }
-                        case("burrow"): {
-                            Burrow b = new Burrow();
-                            setNonBlockingElement(w,b,size);
-                            break;
-                        }
-                        case("rabbit"): {
-                            Rabbit rab = new Rabbit();
-                            setElement(w,rab,size);
-                            break;
-                        }
-                    }
-                }
+            if(listOfAmount.size() == 2) {
+                spawnCount = r.nextInt(listOfAmount.get(1) - listOfAmount.get(0) + 1) + listOfAmount.get(0);
             } else {
-                for(int i = 0; i < list.get(0); i++) {
-                    switch(s) {
-                        case("grass"): {
-                            Grass grass = new Grass();
-                            setNonBlockingElement(w,grass,size);
-                            break;
-                        }
-                        case("burrow"): {
-                            Burrow b = new Burrow();
-                            setNonBlockingElement(w,b,size);
-                            break;
-                        }
-                        case("rabbit"): {
-                            Rabbit rab = new Rabbit();
-                            setElement(w,rab,size);
-                            break;
-                        }
-                    }
-                }
+                spawnCount = listOfAmount.get(0);
             }
+
+            for(int i = 0; i < spawnCount; i++) {
+                createAndPlaceElement(w, type, information.getSpawnLocation(), size);
+            }
+
         }
-
-
-
 
 
         p.show();
@@ -108,6 +73,51 @@ public class Main {
             p.simulate();
         }
     }
+
+    public static void createAndPlaceElement(World w, String type, Location specificLocation, int size) {
+
+        Object entity = null;
+        boolean isBlocking = true;
+
+
+        switch(type) {
+            case("grass"): {
+                entity = new Grass();
+                isBlocking = false;
+                break;
+            }
+            case("burrow"): {
+                entity = new Burrow();
+                isBlocking = false;
+                break;
+            }
+            case("rabbit"): {
+                entity = new Rabbit();
+                isBlocking = true;
+                break;
+            }
+            case("wolf"): {
+                entity = new Wolf();
+                isBlocking = true;
+                break;
+            }
+            default: {
+                System.out.println("Invalid entity type");
+            }
+        }
+
+        if(entity == null) return;
+        if(specificLocation != null) {
+            w.setTile(specificLocation, entity);
+        } else {
+            if(isBlocking) {
+                setElement(w, entity, size);
+            } else {
+                setNonBlockingElement(w, entity, size);
+            }
+        }
+    }
+
 
     public static void setElement(World w, Object o, int size) {
         Random r = new Random();
