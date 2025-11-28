@@ -23,11 +23,9 @@ public class Main {
         String path = "resources/week-2/t2-1c.txt";
 
 
-        TestInputReaderExample reader = new TestInputReaderExample(path);
+        InputReader reader = new InputReader(path);
 
         HashMap<String, EntityConfig> configMap = reader.getConfigMap();
-
-
 
         Random r = new Random();
         int size = reader.getSize();
