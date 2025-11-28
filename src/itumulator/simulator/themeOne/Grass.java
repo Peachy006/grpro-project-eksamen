@@ -1,15 +1,25 @@
 package itumulator.simulator.themeOne;
 
+import itumulator.executable.DisplayInformation;
+import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
 import itumulator.world.Location;
 import itumulator.world.World;
 import itumulator.world.NonBlocking;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Set;
 
-public class Grass implements Actor, NonBlocking {
+public class Grass implements Actor, NonBlocking, DynamicDisplayInformationProvider {
+
+
+    @Override
+    public DisplayInformation getInformation() {
+        return new DisplayInformation(Color.BLACK, "grass", true);
+
+    }
 
     @Override
     public void act(World w) {

@@ -1,6 +1,7 @@
 package itumulator.simulator.themeOne;
 
 import itumulator.executable.DisplayInformation;
+import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
 import itumulator.simulator.Animal;
 import itumulator.world.World;
@@ -9,7 +10,7 @@ import itumulator.world.Location;
 import java.awt.*;
 import java.util.*;
 
-public class Rabbit extends Animal implements Actor {
+public class Rabbit extends Animal implements Actor, DynamicDisplayInformationProvider {
 
     int energy = 150;
     boolean isBurrowed = false;
@@ -21,6 +22,13 @@ public class Rabbit extends Animal implements Actor {
 
     private Location burrowLocation = null;
 
+    @Override
+    public DisplayInformation getInformation() {
+        if(this.age < 3) {
+            return new DisplayInformation(Color.BLACK, "rabbit-small", true);
+        }
+        return new DisplayInformation(Color.BLACK, "rabbit-large", true);
+    }
 
     public Location getBurrowLocation() {
         return burrowLocation;
@@ -35,38 +43,8 @@ public class Rabbit extends Animal implements Actor {
         //
         if(!isBurrowed) {
             //aging logic
-            dayCount++;
-            if(dayCount >= 5) {
-                dayCount = 0;
-                age++;
-                totalEnergy -= 10;
-                if(age >= 10) {
-                    w.delete(this);
-                    return;
-                }
-            }
 
-            //the rabbit will reproduce if another rabbit is nearby
-            Set<Location> neighbours = w.getSurroundingTiles(w.getLocation(this));
-
-            for(Location l : neighbours) {
-                if(w.getTile(l) != null && w.getTile(l) instanceof Rabbit) {
-                    Rabbit tempRabbit = (Rabbit)w.getTile(l);
-
-                    if(tempRabbit.age >= 5 && this.age >= 5 && tempRabbit.IntercourseDelayTimer <= 1 && this.IntercourseDelayTimer <= 1) {
-                        tempRabbit.IntercourseDelayTimer = 5;
-                        this.IntercourseDelayTimer = 5;
-
-                        Set<Location> tempNeighbours = w.getEmptySurroundingTiles(w.getLocation(this));
-
-                        if(!tempNeighbours.isEmpty()) {
-                            ArrayList<Location> tempNeighboursList = new ArrayList<>(tempNeighbours);
-                            w.setTile(tempNeighboursList.get(r.nextInt(tempNeighboursList.size())), new Rabbit());
-                        }
-                    }
-                }
-            }
-            if(IntercourseDelayTimer > 0) IntercourseDelayTimer--;
+            age(w);
 
 
             Location currentLocation = w.getLocation(this);
@@ -82,33 +60,10 @@ public class Rabbit extends Animal implements Actor {
                 }
             }
 
-            //Digging Burrow logic
-            if(this.burrowLocation == null && w.getNonBlocking(w.getLocation(this)) == null) {
+            reproduce(w);
 
-                if(r.nextDouble() < 0.15 && !w.containsNonBlocking(currentLocation)) {
-                    Burrow burrow = new Burrow();
-                    w.setTile(currentLocation, burrow);
-                    //Set Rabbit to the Burrow it made
-                    this.burrowLocation = w.getLocation(this);
-                    burrow.addRabbit(this);
-                }
-            }
+            burrowLogic(w, currentLocation);
 
-            //Rabbit gets Burrow at night if it doesn't have one
-            if(this.burrowLocation == null && w.isNight()){
-                //Checks for Burrows
-                Set<Location> surroundingBurrows =  w.getSurroundingTiles(w.getLocation(this), w.getSize());
-                for(Location l : surroundingBurrows) {
-                    Object Tile = w.getTile(l);
-
-                    if(Tile instanceof Burrow) {
-                        Burrow nearBurrow = (Burrow)Tile;
-
-                        this.burrowLocation = w.getLocation(nearBurrow);
-                        nearBurrow.addRabbit(this);
-                    }
-                }
-            }
 
 
             //move if the rabbit has the energy
@@ -154,6 +109,74 @@ public class Rabbit extends Animal implements Actor {
             if(burrowLocation != null && w.isTileEmpty(burrowLocation)) {
                 w.setTile(burrowLocation, this);
                 isBurrowed = false;
+            }
+        }
+    }
+
+    public void age(World w) {
+        dayCount++;
+        if(dayCount >= 5) {
+            dayCount = 0;
+            age++;
+            totalEnergy -= 10;
+            if(age >= 10) {
+                w.delete(this);
+                return;
+            }
+        }
+    }
+
+    public void reproduce(World w) {
+        Random r = new Random();
+        //the rabbit will reproduce if another rabbit is nearby
+        Set<Location> neighbours = w.getSurroundingTiles(w.getLocation(this));
+
+        for(Location l : neighbours) {
+            if(w.getTile(l) != null && w.getTile(l) instanceof Rabbit tempRabbit) {
+
+                if(tempRabbit.age >= 5 && this.age >= 5 && tempRabbit.IntercourseDelayTimer <= 1 && this.IntercourseDelayTimer <= 1) {
+                    tempRabbit.IntercourseDelayTimer = 5;
+                    this.IntercourseDelayTimer = 5;
+
+                    Set<Location> tempNeighbours = w.getEmptySurroundingTiles(w.getLocation(this));
+
+                    if(!tempNeighbours.isEmpty()) {
+                        ArrayList<Location> tempNeighboursList = new ArrayList<>(tempNeighbours);
+                        w.setTile(tempNeighboursList.get(r.nextInt(tempNeighboursList.size())), new Rabbit());
+                    }
+                }
+            }
+        }
+        if(IntercourseDelayTimer > 0) IntercourseDelayTimer--;
+
+    }
+
+    public void burrowLogic(World w, Location currentLocation) {
+        Random r = new Random();
+        //Digging Burrow logic
+        if(this.burrowLocation == null && w.getNonBlocking(w.getLocation(this)) == null) {
+
+            if(r.nextDouble() < 0.15 && !w.containsNonBlocking(currentLocation)) {
+                Burrow burrow = new Burrow("small");
+                w.setTile(currentLocation, burrow);
+                //Set Rabbit to the Burrow it made
+                this.burrowLocation = w.getLocation(this);
+                burrow.addRabbit(this);
+            }
+        }
+
+        //Rabbit gets Burrow at night if it doesn't have one
+        if(this.burrowLocation == null && w.isNight()){
+            //Checks for Burrows
+            Set<Location> surroundingBurrows =  w.getSurroundingTiles(w.getLocation(this), w.getSize());
+            for(Location l : surroundingBurrows) {
+                Object Tile = w.getTile(l);
+
+                if(Tile instanceof Burrow nearBurrow) {
+                    this.burrowLocation = w.getLocation(nearBurrow);
+                    nearBurrow.addRabbit(this);
+                    break;
+                }
             }
         }
     }

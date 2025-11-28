@@ -15,7 +15,15 @@ import java.util.Random;
 
 
 
+//TODO fix the rabbit act logic
+//TODO assign burrows to bunny based on distance instead of random
+//TODO did i remember to remove rabbits from burrows
+
 public class Main {
+
+
+    //The default size for burrows is set here, this can be changed based on who makes the burrow, but when a burrow is spawned by file it will be set to large as defualt
+    static String burrowDefaultSize = "large";
 
 
     public static void main(String[] args) throws IOException{
@@ -29,19 +37,12 @@ public class Main {
 
         Random r = new Random();
         int size = reader.getSize();
-        int delay = 1000;
         int display_size = 800;
+        int delay = 1000;
         Program p = new Program(size, display_size, delay);
         World w = p.getWorld();
 
-        // Set display information for Grass
-        DisplayInformation grassDisplay = new DisplayInformation(Color.GREEN, "grass");
-        p.setDisplayInformation(Grass.class, grassDisplay);
-
-        //Set dislay for rabbti
-
-        DisplayInformation rabbitDisplay = new DisplayInformation(Color.RED, "rabbit-small");
-        p.setDisplayInformation(Rabbit.class, rabbitDisplay);
+        int nextPackID = 1;
 
 
         //read input
@@ -59,7 +60,11 @@ public class Main {
             }
 
             for(int i = 0; i < spawnCount; i++) {
-                createAndPlaceElement(w, type, information.getSpawnLocation(), size);
+                createAndPlaceElement(w, type, information.getSpawnLocation(), size, nextPackID);
+            }
+
+            if(type.equals("wolf")) {
+                nextPackID++;
             }
 
         }
@@ -72,7 +77,7 @@ public class Main {
         }
     }
 
-    public static void createAndPlaceElement(World w, String type, Location specificLocation, int size) {
+    public static void createAndPlaceElement(World w, String type, Location specificLocation, int size, int packID) {
 
         Object entity = null;
         boolean isBlocking = true;
@@ -85,7 +90,7 @@ public class Main {
                 break;
             }
             case("burrow"): {
-                entity = new Burrow();
+                entity = new Burrow(burrowDefaultSize);
                 isBlocking = false;
                 break;
             }
@@ -95,7 +100,7 @@ public class Main {
                 break;
             }
             case("wolf"): {
-                entity = new Wolf(1);
+                entity = new Wolf(packID);
                 isBlocking = true;
                 break;
             }
