@@ -95,7 +95,7 @@ public class Main {
                 break;
             }
             case("wolf"): {
-                entity = new Wolf();
+                entity = new Wolf(1);
                 isBlocking = true;
                 break;
             }
