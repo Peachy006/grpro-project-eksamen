@@ -23,6 +23,7 @@ public class Bear extends Animal implements Actor {
     ///
     int energy;
     int totalEnergy;
+    int age;
     Boolean hunting;
 
     boolean hasTerritory;
@@ -33,6 +34,7 @@ public class Bear extends Animal implements Actor {
     public  Bear() {
         this.energy = 200;
         this.totalEnergy = 200;
+        this.age = 0;
 
         this.hasTerritory = false;
         this.hunting = false;
@@ -43,6 +45,16 @@ public class Bear extends Animal implements Actor {
     public void act(World w) {
         Location l = w.getLocation(this);
         this.trespassers = territory.getTrespassers();
+
+        if (energy <= 0) {
+            w.delete(this);
+        }
+
+        if (w.getDayDuration() % w.getDayDuration() == 0 && w.isDay()) {
+            this.age();
+
+        }
+
 
         // on spawn make list of territory
         if (!hasTerritory) {
@@ -112,5 +124,13 @@ public class Bear extends Animal implements Actor {
         return hasTerritory;
     }
 
+    public void age() {
+        this.age++;
+        totalEnergy = totalEnergy - 10;
+
+        if (energy > totalEnergy) {
+            energy = totalEnergy;
+        }
+    }
 }
 
