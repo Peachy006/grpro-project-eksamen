@@ -23,7 +23,7 @@ public class Main {
 
 
     //The default size for burrows is set here, this can be changed based on who makes the burrow, but when a burrow is spawned by file it will be set to large as defualt
-    static String burrowDefaultSize = "large";
+    static String burrowDefaultSize = "small";
 
 
     public static void main(String[] args) throws IOException{
