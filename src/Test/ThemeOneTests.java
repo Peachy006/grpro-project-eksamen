@@ -261,7 +261,12 @@ public class ThemeOneTests {
         rabbit.setAge(9);
         rabbit.setDayCount(4);
 
+        //This needed, since Rabbit's age does not define TotalEnergy, but it loses energy when aging.
+        rabbit.setTotalEnergy(20);
+        rabbit.setEnergy(20);
+
         w.setTile(startLocation, rabbit);
+
         assertTrue(w.contains(rabbit));
 
         p.simulate();
