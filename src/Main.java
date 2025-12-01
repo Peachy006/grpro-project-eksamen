@@ -33,7 +33,7 @@ public class Main {
 
         InputReader reader = new InputReader(path);
 
-        HashMap<String, EntityConfig> configMap = reader.getConfigMap();
+        HashMap<String, ArrayList<EntityConfig>> configMap = reader.getConfigMap();
 
         Random r = new Random();
         int size = reader.getSize();
@@ -48,25 +48,27 @@ public class Main {
         //read input
 
         for(String type : configMap.keySet()) {
-            EntityConfig information = configMap.get(type);
-            ArrayList<Integer> listOfAmount = information.getSpawnAmount();
+            ArrayList<EntityConfig> configurations = configMap.get(type);
 
-            int spawnCount;
+            for(EntityConfig information : configurations) {
+                ArrayList<Integer> listOfAmount = information.getSpawnAmount();
 
-            if(listOfAmount.size() == 2) {
-                spawnCount = r.nextInt(listOfAmount.get(1) - listOfAmount.get(0) + 1) + listOfAmount.get(0);
-            } else {
-                spawnCount = listOfAmount.get(0);
+                int spawnCount;
+
+                if(listOfAmount.size() == 2) {
+                    spawnCount = r.nextInt(listOfAmount.get(1) - listOfAmount.get(0) + 1) + listOfAmount.get(0);
+                } else {
+                    spawnCount = listOfAmount.get(0);
+                }
+
+                for(int i = 0; i < spawnCount; i++) {
+                    createAndPlaceElement(w, type, information.getSpawnLocation(), size, nextPackID);
+                }
+
+                if(type.equals("wolf")) {
+                    nextPackID++;
+                }
             }
-
-            for(int i = 0; i < spawnCount; i++) {
-                createAndPlaceElement(w, type, information.getSpawnLocation(), size, nextPackID);
-            }
-
-            if(type.equals("wolf")) {
-                nextPackID++;
-            }
-
         }
 
         p.show();

@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -276,7 +277,7 @@ public class ThemeOneTests {
         String path = "resources/week-2/tf2-1.txt";
 
         InputReader reader = new InputReader(path);
-        HashMap<String, EntityConfig> configMap = reader.getConfigMap();
+        HashMap<String, ArrayList<EntityConfig>> configMap = reader.getConfigMap();
 
         int expectedSize = reader.getSize();
         int grassCount = 0;
@@ -294,29 +295,37 @@ public class ThemeOneTests {
 
         assertEquals(expectedSize, reader.getSize());
 
+        int nextPackID = 1;
+        
         for (String type : configMap.keySet()) {
-            EntityConfig information = configMap.get(type);
+            ArrayList<EntityConfig> configurations = configMap.get(type);
+            
+            for(EntityConfig information : configurations) {
+                int spawnCount;
+                if(information.getSpawnAmount().size() == 2) {
+                    int min = information.getSpawnAmount().get(0);
+                    int max = information.getSpawnAmount().get(1);
 
-            int spawnCount;
-            if(information.getSpawnAmount().size() == 2) {
-                int min = information.getSpawnAmount().get(0);
-                int max = information.getSpawnAmount().get(1);
+                    spawnCount = random.nextInt(max - min + 1) + min;
+                } else {
+                    spawnCount = information.getSpawnAmount().get(0);
+                }
+                switch(type) {
+                    case "grass": grassCount += spawnCount; break;
+                    case "wolf": wolfCount += spawnCount; break;
+                    case "burrow": burrowCount += spawnCount; break;
+                    case "rabbit": rabbitCount += spawnCount; break;
+                    case "bear": bearCount += spawnCount; break;
+                    case "bush": bushCount += spawnCount; break;
 
-                spawnCount = random.nextInt(max - min + 1) + min;
-            } else {
-                spawnCount = information.getSpawnAmount().get(0);
-            }
-            switch(type) {
-                case "grass": grassCount = spawnCount; break;
-                case "wolf": wolfCount = spawnCount; break;
-                case "burrow": burrowCount = spawnCount; break;
-                case "rabbit": rabbitCount = spawnCount; break;
-                case "bear": bearCount = spawnCount; break;
-                case "bush": bushCount = spawnCount; break;
-
-            }
-            for(int i = 0; i < spawnCount; i++) {
-                createAndPlaceElement(w, type, information.getSpawnLocation(), reader.getSize());
+                }
+                for(int i = 0; i < spawnCount; i++) {
+                    createAndPlaceElementWithPackID(w, type, information.getSpawnLocation(), reader.getSize(), nextPackID);
+                }
+                
+                if(type.equals("wolf")) {
+                    nextPackID++;
+                }
             }
         }
 
@@ -410,6 +419,56 @@ public class ThemeOneTests {
             }
             case("wolf"): {
                 entity = new Wolf(1);
+                isBlocking = true;
+                break;
+            }
+            case("bear"): {
+                entity = new Bear();
+                isBlocking = true;
+                break;
+            }
+
+            default: {
+                System.out.println("Invalid entity type");
+            }
+        }
+
+        if(entity == null) return;
+        if(specificLocation != null) {
+            w.setTile(specificLocation, entity);
+        } else {
+            if(isBlocking) {
+                setElement(w, entity, size);
+            } else {
+                setNonBlockingElement(w, entity, size);
+            }
+        }
+    }
+    
+    public static void createAndPlaceElementWithPackID(World w, String type, Location specificLocation, int size, int packID) {
+
+        Object entity = null;
+        boolean isBlocking = true;
+
+
+        switch(type) {
+            case("grass"): {
+                entity = new Grass();
+                isBlocking = false;
+                break;
+            }
+            case("burrow"): {
+                entity = new Burrow(burrowDefaultSize);
+                isBlocking = false;
+                break;
+            }
+            case("rabbit"): {
+                entity = new Rabbit();
+                isBlocking = true;
+                break;
+            }
+            case("wolf"): {
+                entity = new Wolf(packID);
                 isBlocking = true;
                 break;
             }

@@ -2,7 +2,7 @@ package itumulator.simulator.themeTwo;
 
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
-import itumulator.simulator.Animal;
+import itumulator.simulator.*;
 import itumulator.simulator.themeOne.Rabbit;
 import itumulator.world.Location;
 import itumulator.world.World;
@@ -11,10 +11,7 @@ import java.awt.Color;
 import java.util.*;
 
 
-public class Wolf extends Animal implements Actor, DynamicDisplayInformationProvider {
-
-    protected int totalEnergy = 150;
-    protected int energy = totalEnergy;
+public class Wolf extends Predator implements Actor, DynamicDisplayInformationProvider {
     protected boolean isRemoved = false;
     protected Random random = new Random();
     protected int packID;
@@ -36,6 +33,8 @@ public class Wolf extends Animal implements Actor, DynamicDisplayInformationProv
 
 
     public boolean hunt(World w, Location currentLocation) {
+
+
         //Wolf looks for nearby Prey
         Set<Location> surroundingTiles = w.getSurroundingTiles(currentLocation);
         Set<Rabbit> nearbyRabbits = w.getAll(Rabbit.class, surroundingTiles);
