@@ -14,7 +14,6 @@ import java.util.*;
 public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProvider {
 
     boolean isBurrowed = false;
-    int dayCount = 0;
     int IntercourseDelayTimer = 0;
     boolean aboutToGoDown = false;
 

@@ -103,5 +103,5 @@ public abstract class Animal {
 
     protected int getTotalEnergy() {return totalEnergy;}
 
-    protected void setTotalEnergy(int totalEnergy) {this.totalEnergy = totalEnergy;}
+    public void setTotalEnergy(int totalEnergy) {this.totalEnergy = totalEnergy;}
 }
