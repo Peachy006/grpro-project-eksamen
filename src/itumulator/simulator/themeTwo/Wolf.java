@@ -59,11 +59,13 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
 
     @Override
     public void act(World w) {
+
         if (!isRemoved) {
             age(w);
             
             Location currentLocation = w.getLocation(this);
-            //Wolf tries to hunt nearby 'Rabbits'
+
+            //Wolf tries to hunt
             hunt(w);
             boolean moved = false;
 
@@ -74,13 +76,30 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
                 if (moveRandomly(w, currentLocation)) {
                     moved = true;
                 }
-            }
-            if (moved) {
+            } else  {
                 energy -= 10;
             }
+
             if (energy <= 10 && !isRemoved) {
                 w.delete(this);
                 isRemoved = true;
+            }
+        }
+    }
+
+
+    // takes a random animal in its radius and ehter eats it or attacks it
+    public void hunt(World w) {
+        Set<Location> tiles = w.getSurroundingTiles(w.getLocation(this));
+        Set<Animal> nearbyPrey = w.getAll(Animal.class, tiles);
+
+        for (Animal target : nearbyPrey) {
+            if (target instanceof Prey) {
+                super.hunt(w, target);
+                return;
+            } else if (target instanceof Predator && ((Wolf) target).getPackID() != this.packID) {
+                super.attack(target);
+                return;
             }
         }
     }

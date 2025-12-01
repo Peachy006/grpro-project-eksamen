@@ -5,7 +5,7 @@ import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
 import itumulator.simulator.Animal;
 import itumulator.simulator.Predator;
-import itumulator.simulator.themeOne.Rabbit;
+import itumulator.simulator.Prey;
 import itumulator.world.World;
 import itumulator.world.Location;
 
@@ -62,6 +62,19 @@ public class Bear extends Predator implements Actor, DynamicDisplayInformationPr
         energy -= 10;
     }
 
+    @Override
+    public void hunt(World w) {
+        Set<Location> tiles = w.getSurroundingTiles(w.getLocation(this));
+        Set<Animal> nearbyPrey = w.getAll(Animal.class, tiles);
+
+        for (Animal target : nearbyPrey) {
+            if ( target instanceof Prey) {
+                super.hunt(w, target);
+            } else if (target instanceof Predator) {
+                super.attack(target);
+            }
+        }
+    }
 
     public void eat() {
         // make bushes to eat
