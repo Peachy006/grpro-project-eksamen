@@ -6,8 +6,8 @@ import itumulator.world.World;
 
 public abstract class Prey extends Animal {
 
-    protected Prey(int energy, int totalEnergy, int age) {
-        super(energy, totalEnergy, age);
+    protected Prey(int energy, int age) {
+        super(energy, age);
     }
 
     @Override

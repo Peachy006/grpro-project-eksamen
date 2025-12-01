@@ -14,9 +14,9 @@ public abstract class Animal {
 
     protected Random r;
 
-    public Animal(int energy, int totalEnergy, int age) {
+    public Animal(int energy, int age) {
         this.energy = energy;
-        this.totalEnergy = totalEnergy;
+        this.totalEnergy = energy;
         this.age = age;
 
         r = new Random();
@@ -40,10 +40,6 @@ public abstract class Animal {
 
     // for override
     protected void eat(){}
-
-    protected int getRandomInt(int n) {
-        return r.nextInt(n);
-    }
 
     ///----------movement----------
 

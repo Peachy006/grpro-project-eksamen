@@ -15,8 +15,8 @@ public abstract class Predator extends Animal {
     protected Territory territory;
 
 
-    protected Predator(int energy, int totalEnergy, int age) {
-        super(energy, totalEnergy, age);
+    protected Predator(int energy, int age) {
+        super(energy, age);
         hunting = false;
         hasTerritory = false;
     }
@@ -66,7 +66,7 @@ public abstract class Predator extends Animal {
 
     protected void attack(World w, Animal target) {
         int targetEnergy = target.getEnergy();
-        int dmg = super.getRandomInt(20);
+        int dmg = r.nextInt(20);
 
         if (target instanceof Predator) {
             target.setEnergy(targetEnergy - dmg);

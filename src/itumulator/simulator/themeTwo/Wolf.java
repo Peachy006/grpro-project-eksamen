@@ -19,7 +19,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
 
 
     public Wolf(int packID) {
-        super(400, 400, 0);
+        super(400, 0);
         this.packID = packID;
     }
 

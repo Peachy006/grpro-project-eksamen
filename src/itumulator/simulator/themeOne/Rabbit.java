@@ -21,7 +21,7 @@ public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProv
     private Location burrowLocation = null;
 
     public Rabbit() {
-        super(150, 150, 1);
+        super(150, 1);
     }
 
     @Override

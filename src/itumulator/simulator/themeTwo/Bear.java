@@ -19,7 +19,7 @@ public class Bear extends Predator implements Actor, DynamicDisplayInformationPr
 
 
     public Bear() {
-        super(200,200,0);
+        super(200,0);
     }
 
 
