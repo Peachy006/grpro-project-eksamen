@@ -4,13 +4,14 @@ import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
 import itumulator.simulator.Animal;
+import itumulator.simulator.Prey;
 import itumulator.world.World;
 import itumulator.world.Location;
 
 import java.awt.*;
 import java.util.*;
 
-public class Rabbit extends Animal implements Actor, DynamicDisplayInformationProvider {
+public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProvider {
 
     int energy = 150;
     boolean isBurrowed = false;
@@ -21,6 +22,10 @@ public class Rabbit extends Animal implements Actor, DynamicDisplayInformationPr
     boolean aboutToGoDown = false;
 
     private Location burrowLocation = null;
+
+    public Rabbit() {
+        super(150, 150, 0);
+    }
 
     @Override
     public DisplayInformation getInformation() {

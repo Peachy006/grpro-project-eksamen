@@ -6,15 +6,53 @@ import itumulator.world.Location;
 import java.util.*;
 
 public abstract class Animal {
+    private World world;
 
+    protected int energy;
+    protected int totalEnergy;
+    protected int age;
+
+    protected Random r;
+
+    Animal(int energy, int totalEnergy, int age) {
+        this.energy = energy;
+        this.totalEnergy = totalEnergy;
+        this.age = 0;
+
+        r = new Random();
+    }
+
+    protected void age(World w) {
+        this.age++;
+        totalEnergy = totalEnergy - 10;
+
+        if (energy > totalEnergy) {
+            energy = totalEnergy;
+        } else if (energy <= 0) {
+            this.kill(w);
+        }
+    }
+
+    protected void kill(World w) {
+        w.delete(this);
+    }
+
+    // for override
+    protected void eat(){}
+
+    protected int getRandomInt(int n) {
+        return r.nextInt(n);
+    }
+
+    ///----------movement----------
 
     //moves animal to a location
-    public void move(World w, Location target) {
+    protected void move(World w, Location target) {
         w.move(this, target);
     }
 
     //basic random movement
-    public boolean moveRandomly(World w, Location currentLocation) {
+    protected boolean moveRandomly(World w, Location currentLocation) {
         Set<Location> emptyNeighbours = w.getEmptySurroundingTiles(currentLocation);
 
         if (emptyNeighbours.isEmpty()) {
@@ -30,7 +68,7 @@ public abstract class Animal {
     }
 
     //pathfinding movement
-    public boolean moveTowards(World w, Location currentLocation, Location targetLocation) {
+    protected boolean moveTowards(World w, Location currentLocation, Location targetLocation) {
         Set<Location> emptyNeighbours = w.getEmptySurroundingTiles(currentLocation);
 
         if (emptyNeighbours.isEmpty()) {
@@ -54,9 +92,17 @@ public abstract class Animal {
         if (bestMove != null) {
             w.move(this, bestMove);
             return true;
-
         }
 
         return false;
     }
+
+    ///----------get/set----------
+    protected int getEnergy() {return energy;}
+
+    protected void setEnergy(int energy) {this.energy = energy;}
+
+    protected int getTotalEnergy() {return totalEnergy;}
+
+    protected void setTotalEnergy(int totalEnergy) {this.totalEnergy = totalEnergy;}
 }
