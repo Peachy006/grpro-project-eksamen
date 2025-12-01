@@ -102,7 +102,7 @@ public class Wolf extends Animal implements Actor, DynamicDisplayInformationProv
             }
         }
 
-        if (totalEnergy <= 10 && !isRemoved) {
+        if (energy <= 10 && !isRemoved) {
             w.delete(this);
             isRemoved = true;
         }
