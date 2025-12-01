@@ -19,13 +19,13 @@ public class Territory {
 
     Set<Location> territory;
 
-    public Territory(World w, Animal animal) {
+    public Territory(World world, Animal animal) {
         this.owner = animal;
-        this.world = w;
+        this.world = world;
 
-        this.spawnLocation = w.getLocation(animal);
+        this.spawnLocation = world.getLocation(animal);
         this.territorySize = 4;
-        this.territory = w.getSurroundingTiles(w.getLocation(animal),territorySize);
+        this.territory = world.getSurroundingTiles(world.getLocation(animal),territorySize);
     }
 
     /// move random movement code from animal but with territory
@@ -34,7 +34,7 @@ public class Territory {
     public void moveInTerritory(World w, Animal a) {
         Location l = w.getLocation(a);
 
-        if (this.territoryCheck(l)) {
+        if (world.contains(l)) {
             Set<Location> emptyNeighbours = w.getEmptySurroundingTiles(w.getLocation(a));
 
             if (emptyNeighbours != null ) {
@@ -45,17 +45,17 @@ public class Territory {
                 Location newLocation = neighboursList.get(r.nextInt(neighboursList.size()));
 
                 //reroll if it is not moving on its territory
-                while (!this.territoryCheck(newLocation)) {
-                    // in case the list became empty
-                    if (emptyNeighbours.isEmpty()) {
-                        newLocation = l;
-                        continue;
-                    }
+                if(emptyNeighbours.isEmpty()) {
+                    while (!world.contains(newLocation)) {
 
-                    //remove tile that cant be used from the list
-                    neighboursList.remove(newLocation);
-                    newLocation = neighboursList.get(r.nextInt(neighboursList.size()));
+                        //remove tile that cant be used from the list
+                        neighboursList.remove(newLocation);
+                        newLocation = neighboursList.get(r.nextInt(neighboursList.size()));
+                    }
+                } else {
+                    newLocation = l;
                 }
+
                 w.move(a, newLocation);
                 w.setCurrentLocation(newLocation);
             }
@@ -64,14 +64,10 @@ public class Territory {
         }
     }
 
-    public boolean territoryCheck(Location l) {
-        return world.contains(l);
-    }
-
     public Set<Animal> getTrespassers() {
         Set<Animal> trespassers = new HashSet<>();
 
-        // go throught territory
+        // go through territory
         for (Location temp : territory) {
             Object o = world.getTile(temp);
 

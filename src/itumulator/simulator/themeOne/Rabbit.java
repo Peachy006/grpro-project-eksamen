@@ -13,10 +13,7 @@ import java.util.*;
 
 public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProvider {
 
-    int energy = 150;
     boolean isBurrowed = false;
-    int totalEnergy = 150;
-    int age = 1;
     int dayCount = 0;
     int IntercourseDelayTimer = 0;
     boolean aboutToGoDown = false;
@@ -24,12 +21,12 @@ public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProv
     private Location burrowLocation = null;
 
     public Rabbit() {
-        super(150, 150, 0);
+        super(150, 150, 1);
     }
 
     @Override
     public DisplayInformation getInformation() {
-        if(this.age < 3) {
+        if(this.age < 15) {
             return new DisplayInformation(Color.BLACK, "rabbit-small", true);
         }
         return new DisplayInformation(Color.BLACK, "rabbit-large", true);
@@ -118,19 +115,6 @@ public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProv
         }
     }
 
-    public void age(World w) {
-        dayCount++;
-        if(dayCount >= 5) {
-            dayCount = 0;
-            age++;
-            totalEnergy -= 10;
-            if(age >= 10) {
-                w.delete(this);
-                return;
-            }
-        }
-    }
-
     public void reproduce(World w) {
         Random r = new Random();
         //the rabbit will reproduce if another rabbit is nearby
@@ -184,14 +168,6 @@ public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProv
                 }
             }
         }
-    }
-
-    public int getEnergy() {
-        return energy;
-    }
-
-    public void setEnergy(int energy) {
-        this.energy = energy;
     }
 
     public void setAge(int age) {

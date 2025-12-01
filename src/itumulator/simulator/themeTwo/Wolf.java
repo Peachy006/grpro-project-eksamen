@@ -19,6 +19,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
 
 
     public Wolf(int packID) {
+        super(400, 400, 0);
         this.packID = packID;
     }
 
@@ -31,32 +32,6 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         return new DisplayInformation(Color.DARK_GRAY, "wolf", true);
     }
 
-
-    public boolean hunt(World w, Location currentLocation) {
-
-
-        //Wolf looks for nearby Prey
-        Set<Location> surroundingTiles = w.getSurroundingTiles(currentLocation);
-        Set<Rabbit> nearbyRabbits = w.getAll(Rabbit.class, surroundingTiles);
-
-        //If there's no prey, hunts end
-        if (nearbyRabbits.isEmpty()) {
-            return false;
-        }
-
-        //Choose a random Rabbit and eats it
-        ArrayList<Rabbit> rabbits = new ArrayList<>(nearbyRabbits);
-        Rabbit preyRabbit = rabbits.get(random.nextInt(rabbits.size()));
-
-        int gainedEnergy = preyRabbit.getEnergy();
-        energy += gainedEnergy;
-        if (energy > totalEnergy) {
-            energy = totalEnergy;
-        }
-
-        w.delete(preyRabbit);
-        return true;
-    }
 
     public boolean moveWithPack(World w, Location currentLocation) {
         //Looks for wolves in pack
@@ -85,9 +60,11 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
     @Override
     public void act(World w) {
         if (!isRemoved) {
+            age(w);
+            
             Location currentLocation = w.getLocation(this);
             //Wolf tries to hunt nearby 'Rabbits'
-            hunt(w, currentLocation);
+            hunt(w);
             boolean moved = false;
 
             if (moveWithPack(w, currentLocation)) {

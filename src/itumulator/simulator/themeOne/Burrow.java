@@ -36,12 +36,12 @@ public class Burrow implements Actor, NonBlocking, DynamicDisplayInformationProv
 
     @Override
     public void act(World w) {
-        for(Rabbit rabbit : rabbits) {
+        Set<Rabbit> rabbitsCopy = new HashSet<>(rabbits);
+        for(Rabbit rabbit : rabbitsCopy) {
             if(!w.contains(rabbit)) {
                 rabbits.remove(rabbit);
             }
         }
-
     }
 
     public void addRabbit(Rabbit rabbit) {

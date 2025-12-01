@@ -6,35 +6,36 @@ import itumulator.world.Location;
 import java.util.*;
 
 public abstract class Animal {
-    private World world;
 
     protected int energy;
     protected int totalEnergy;
     protected int age;
+    protected int dayCount = 0;
 
     protected Random r;
 
-    Animal(int energy, int totalEnergy, int age) {
+    public Animal(int energy, int totalEnergy, int age) {
         this.energy = energy;
         this.totalEnergy = totalEnergy;
-        this.age = 0;
+        this.age = age;
 
         r = new Random();
     }
 
     protected void age(World w) {
-        this.age++;
-        totalEnergy = totalEnergy - 10;
+        dayCount++;
+        if(dayCount == 5) {
+            this.age++;
+            dayCount = 0;
+            totalEnergy = totalEnergy - 10;
 
-        if (energy > totalEnergy) {
-            energy = totalEnergy;
-        } else if (energy <= 0) {
-            this.kill(w);
+            if (energy > totalEnergy) {
+                energy = totalEnergy;
+            } else if (energy <= 0) {
+                w.remove(this);
+            }
         }
-    }
 
-    protected void kill(World w) {
-        w.delete(this);
     }
 
     // for override
@@ -68,7 +69,7 @@ public abstract class Animal {
     }
 
     //pathfinding movement
-    protected boolean moveTowards(World w, Location currentLocation, Location targetLocation) {
+    public boolean moveTowards(World w, Location currentLocation, Location targetLocation) {
         Set<Location> emptyNeighbours = w.getEmptySurroundingTiles(currentLocation);
 
         if (emptyNeighbours.isEmpty()) {
@@ -98,9 +99,9 @@ public abstract class Animal {
     }
 
     ///----------get/set----------
-    protected int getEnergy() {return energy;}
+    public int getEnergy() {return energy;}
 
-    protected void setEnergy(int energy) {this.energy = energy;}
+    public void setEnergy(int energy) {this.energy = energy;}
 
     protected int getTotalEnergy() {return totalEnergy;}
 

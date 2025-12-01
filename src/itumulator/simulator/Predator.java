@@ -26,29 +26,41 @@ public abstract class Predator extends Animal {
         hasTerritory = true;
     }
 
-    public void hunt(World w, Animal a) {
-        int energy = a.getEnergy();
-        int totalEnergy = a.getTotalEnergy();
+    public void hunt(World w) {
+        int energy = this.getEnergy();
+        int totalEnergy = this.getTotalEnergy();
 
         // make set of animals nearby
-        Set<Animal> nearbyAnimals = w.getAll(Animal.class, w.getSurroundingTiles(w.getLocation(a)));
+        Set<Animal> nearbyAnimals = w.getAll(Animal.class, w.getSurroundingTiles(w.getLocation(this)));
 
         for (Animal target : nearbyAnimals) {
+            // Skip self
+            if (target == this) {
+                continue;
+            }
+            
             // if it is prey
             if (target instanceof Prey) {
                 int gainEnergy = target.getEnergy();
-
-                if (energy > totalEnergy) {
+                
+                // Eat the prey
+                w.delete(target);
+                
+                // Gain energy
+                int newEnergy = energy + gainEnergy;
+                if (newEnergy > totalEnergy) {
                     this.setEnergy(totalEnergy);
                 } else {
-                    a.setEnergy(energy + gainEnergy);
+                    this.setEnergy(newEnergy);
                 }
 
-                // if it is a predator attack it
-            } else if (target instanceof Predator || energy > 100) {
+                return;  // Successfully hunted, stop looking
+
+            // if it is a predator attack it
+            } else if (target instanceof Predator && energy > 100) {
                 this.attack(w, target);
+                return;
             }
-            return;
         }
     }
 

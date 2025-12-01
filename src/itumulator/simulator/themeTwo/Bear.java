@@ -13,32 +13,32 @@ import itumulator.world.Location;
 import java.awt.*;
 import java.util.*;
 
-public class Bear extends Predator implements Actor {
-
-    ///  !!!TIL SEAN OG WILLIAM
-    /// koden er super ophobet, fordi at vi ikke har shared methoeds i animal
-    /// koden skal restruktureres, ved at samle delte metoer i animal når vi mødes
-    /// vi skal sikkert også lave en prey og predittor class
-    /// jeg tænker ikke i vil have jeg roder i det før vi er samlet
+public class Bear extends Predator implements Actor, DynamicDisplayInformationProvider{
 
     Set<Animal> trespassers;
 
 
-    public Bear() {super(200,200,0); }
+    public Bear() {
+        super(200,200,0);
+    }
 
 
     @Override
-    public void act(World w) {
-        Location l = w.getLocation(this);
-        this.trespassers = territory.getTrespassers();
+    public DisplayInformation getInformation() {
+        return new DisplayInformation(Color.ORANGE, "bear", true);
+    }
 
-        if (energy <= 0) {
-            w.delete(this);
+    @Override
+    public void act(World w) {
+        age(w);
+        Location l = w.getLocation(this);
+        if(territory != null) {
+            this.trespassers = territory.getTrespassers();
         }
 
-        if (w.getDayDuration() % w.getDayDuration() == 0 && w.isDay()) {
-            this.age(w);
-
+        if (energy <= 10) {
+            w.delete(this);
+            return;
         }
 
         // on spawn make list of territory
@@ -46,20 +46,19 @@ public class Bear extends Predator implements Actor {
             super.makeTerritory(w);
         }
 
-        // if its hungru start hunting
-        if (energy >= 100) {hunting = true;}
-        else {hunting = false;}
+        // if its hungry start hunting
+        hunting = energy < 100;
 
 
-        // make random move within territorry if not hunting
-        if (!hunting) {
+        // make random move within territory if not hunting
+        if (!hunting && territory != null) {
             territory.moveInTerritory(w,this);
-            this.hunt(w,this);
+            this.hunt(w);
         } else {
             this.moveRandomly(w,l);
-            this.hunt(w,this);
+            this.hunt(w);
         }
-
+        
         energy -= 10;
     }
 
@@ -68,4 +67,3 @@ public class Bear extends Predator implements Actor {
         // make bushes to eat
     }
 }
-
