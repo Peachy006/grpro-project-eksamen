@@ -28,7 +28,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException{
 
-        String path = "resources/week-2/t2-1c.txt";
+        String path = "resources/week-2/tf2-1.txt";
 
 
         InputReader reader = new InputReader(path);
@@ -68,7 +68,6 @@ public class Main {
             }
 
         }
-
 
         p.show();
 

@@ -18,10 +18,10 @@ public class Wolf extends Animal implements Actor, DynamicDisplayInformationProv
     protected boolean isRemoved = false;
     protected Random random = new Random();
     protected int packID;
-    protected int lookForPackRadius = 3;
+    protected int lookForPackRadius = 2;
 
 
-    public Wolf(int packID){
+    public Wolf(int packID) {
         this.packID = packID;
     }
 
@@ -41,7 +41,7 @@ public class Wolf extends Animal implements Actor, DynamicDisplayInformationProv
         Set<Rabbit> nearbyRabbits = w.getAll(Rabbit.class, surroundingTiles);
 
         //If there's no prey, hunts end
-        if (nearbyRabbits.isEmpty()){
+        if (nearbyRabbits.isEmpty()) {
             return false;
         }
 
@@ -66,14 +66,14 @@ public class Wolf extends Animal implements Actor, DynamicDisplayInformationProv
 
         ArrayList<Wolf> wolvesPack = new ArrayList<>();
         for (Wolf wolf : nearbyWolves) {
-            if(wolf == this) {
+            if (wolf == this) {
                 continue;
             }
-            if(wolf.getPackID() == this.packID) {
+            if (wolf.getPackID() == this.packID) {
                 wolvesPack.add(wolf);
             }
         }
-        if (wolvesPack.isEmpty()){
+        if (wolvesPack.isEmpty()) {
             return false;
         }
         Wolf targetWolf = wolvesPack.get(random.nextInt(wolvesPack.size()));
@@ -85,26 +85,27 @@ public class Wolf extends Animal implements Actor, DynamicDisplayInformationProv
 
     @Override
     public void act(World w) {
-        if(!isRemoved) {
+        if (!isRemoved) {
             Location currentLocation = w.getLocation(this);
             //Wolf tries to hunt nearby 'Rabbits'
             hunt(w, currentLocation);
+            boolean moved = false;
 
-            if(moveWithPack(w, currentLocation)){
-                energy -= 10;
-                return;
+            if (moveWithPack(w, currentLocation)) {
+                moved = true;
             }
-
-            if (moveRandomly(w, currentLocation)) {
-                energy -= 10;
-            } else {
-                return;
+            if (!moved) {
+                if (moveRandomly(w, currentLocation)) {
+                    moved = true;
+                }
             }
-        }
-
-        if (energy <= 10 && !isRemoved) {
-            w.delete(this);
-            isRemoved = true;
+            if (moved) {
+                energy -= 10;
+            }
+            if (energy <= 10 && !isRemoved) {
+                w.delete(this);
+                isRemoved = true;
+            }
         }
     }
 }
