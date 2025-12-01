@@ -26,7 +26,7 @@ public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProv
 
     @Override
     public DisplayInformation getInformation() {
-        if(this.age < 15) {
+        if(this.age < 3) {
             return new DisplayInformation(Color.BLACK, "rabbit-small", true);
         }
         return new DisplayInformation(Color.BLACK, "rabbit-large", true);
@@ -45,8 +45,12 @@ public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProv
         //
         if(!isBurrowed && w.contains(this)) {
             //aging logic
-
             age(w);
+            
+            // Check if rabbit died from aging
+            if(!w.contains(this)) {
+                return;
+            }
 
             Location currentLocation = w.getLocation(this);
 
@@ -87,7 +91,8 @@ public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProv
 
                 energy -= 10;
             } else {
-                w.delete(this);
+                if(w.contains(this))
+                    w.delete(this);
                 return;
             }
 

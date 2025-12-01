@@ -24,15 +24,17 @@ public abstract class Animal {
 
     protected void age(World w) {
         dayCount++;
-        if(dayCount == 5) {
+        if(dayCount >= 5) {
             this.age++;
             dayCount = 0;
-            totalEnergy = totalEnergy - 10;
+            totalEnergy -= 10;
 
             if (energy > totalEnergy) {
                 energy = totalEnergy;
-            } else if (energy <= 0) {
-                w.remove(this);
+            }
+            
+            if (totalEnergy <= 10 || energy <= 10) {
+                w.delete(this);
             }
         }
 
