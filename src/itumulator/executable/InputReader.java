@@ -11,7 +11,7 @@ public class InputReader {
     private BufferedReader br;
 
     private int size;
-    private HashMap<String, EntityConfig> configMap;
+    private HashMap<String, ArrayList<EntityConfig>> configMap;
 
 
     public InputReader(String file) throws IOException {
@@ -83,7 +83,12 @@ public class InputReader {
             }
 
             EntityConfig config = new EntityConfig(amountList, spawnLoc);
-            configMap.put(entityType, config);
+
+            // Add to list instead of replacing
+            if (!configMap.containsKey(entityType)) {
+                configMap.put(entityType, new ArrayList<>());
+            }
+            configMap.get(entityType).add(config);
         }
         br.close();
     }
@@ -93,23 +98,23 @@ public class InputReader {
         return size;
     }
 
-    public HashMap<String, EntityConfig> getConfigMap() {
+    public HashMap<String, ArrayList<EntityConfig>> getConfigMap() {
         return configMap;
     }
 
 
-    public EntityConfig getConfig(String type) {
+    public ArrayList<EntityConfig> getConfigs(String type) {
         return configMap.get(type);
     }
 
     public ArrayList<Integer> getSpawnAmount(String type) {
-        EntityConfig config = configMap.get(type);
-        return (config != null) ? config.getSpawnAmount() : null;
+        ArrayList<EntityConfig> configs = configMap.get(type);
+        return (configs != null && !configs.isEmpty()) ? configs.get(0).getSpawnAmount() : null;
     }
 
 
     public Location getSpawnLocation(String type) {
-        EntityConfig config = configMap.get(type);
-        return (config != null) ? config.getSpawnLocation() : null;
+        ArrayList<EntityConfig> configs = configMap.get(type);
+        return (configs != null && !configs.isEmpty()) ? configs.get(0).getSpawnLocation() : null;
     }
 }
