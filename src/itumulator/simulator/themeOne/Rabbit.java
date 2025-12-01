@@ -46,13 +46,13 @@ public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProv
         Random r = new Random();
 
         //
-        if(!isBurrowed) {
+        if(!isBurrowed && w.contains(this)) {
             //aging logic
 
             age(w);
 
-
             Location currentLocation = w.getLocation(this);
+
 
             // Check if there's grass at current location before trying to get it
             if (w.containsNonBlocking(currentLocation)) {

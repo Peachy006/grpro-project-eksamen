@@ -274,7 +274,7 @@ public class ThemeOneTests {
     @Test
     void TestIfWorldMatchInput() throws IOException {
 
-        String path = "resources/week-2/tf2-2.txt";
+        String path = "resources/week-2/tf2-1.txt";
 
         InputReader reader = new InputReader(path);
         HashMap<String, ArrayList<EntityConfig>> configMap = reader.getConfigMap();
