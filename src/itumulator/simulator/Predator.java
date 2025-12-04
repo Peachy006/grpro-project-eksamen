@@ -26,45 +26,26 @@ public abstract class Predator extends Animal {
         hasTerritory = true;
     }
 
-    public void hunt(World w) {
-        int energy = this.getEnergy();
-        int totalEnergy = this.getTotalEnergy();
+    // this kills animal its hunting
+    // make sure that Preditiors dont eat preditors
+    public void hunt(World w, Animal target) {
 
-        // make set of animals nearby
-        Set<Animal> nearbyAnimals = w.getAll(Animal.class, w.getSurroundingTiles(w.getLocation(this)));
-
-        for (Animal target : nearbyAnimals) {
-            // Skip self
-            if (target == this) {
-                continue;
-            }
-            
-            // if it is prey
-            if (target instanceof Prey) {
-                int gainEnergy = target.getEnergy();
+        int gainEnergy = target.getEnergy();
                 
-                // Eat the prey
-                w.delete(target);
+        // Eat the prey
+        w.delete(target);
                 
-                // Gain energy
-                int newEnergy = energy + gainEnergy;
-                if (newEnergy > totalEnergy) {
-                    this.setEnergy(totalEnergy);
-                } else {
-                    this.setEnergy(newEnergy);
-                }
+        // Gain energy
+        int newEnergy = energy + gainEnergy;
 
-                return;  // Successfully hunted, stop looking
-
-            // if it is a predator attack it
-            } else if (target instanceof Predator && energy > 100) {
-                this.attack(w, target);
-                return;
-            }
+        if (newEnergy > totalEnergy) {
+            this.setEnergy(totalEnergy);
+        } else {
+            this.setEnergy(newEnergy);
         }
     }
 
-    protected void attack(World w, Animal target) {
+    protected void attack(Animal target) {
         int targetEnergy = target.getEnergy();
         int dmg = r.nextInt(20);
 
@@ -76,6 +57,8 @@ public abstract class Predator extends Animal {
     public boolean hasTerritory() {return hasTerritory;}
 
     public Territory getTerritory() {return territory;}
+
+    protected abstract void hunt(World w);
 
     ///----------overrides----------
     @Override
