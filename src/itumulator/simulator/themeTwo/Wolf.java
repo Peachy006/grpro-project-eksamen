@@ -21,7 +21,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
     protected int lookForPackRadius = 2;
 
     public Wolf(int packID) {
-        super(50, 0);
+        super(200, 0);
         this.packID = packID;
         wolfPack = new ArrayList<Wolf>();
         hasPack = false;
@@ -127,15 +127,18 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
 
     // updates wolf pack(Arraylist) according to packID
     public void updatePack(World w) {
+        // first remove wolves that no longer exist in the world
+        wolfPack.removeIf(wolf -> !w.contains(wolf));
+    
         // takes all tiles on the map and makes a set of all wolf's on the map
         Set<Location> tiles = w.getSurroundingTiles(w.getLocation(this), w.getSize());
         Set<Wolf> wolves = w.getAll(Wolf.class, tiles);
 
         // if there's wolf's in pack
-        if  (!wolves.isEmpty()) {
-            // add wolf's with the same packID
+        if (!wolves.isEmpty()) {
+            // add wolf's with the same packID (only if not already in pack)
             for (Wolf wolf : wolves) {
-                if (wolf.getPackID() == this.packID) {
+                if (wolf.getPackID() == this.packID && !wolfPack.contains(wolf)) {
                     wolfPack.add(wolf);
                 }
             }

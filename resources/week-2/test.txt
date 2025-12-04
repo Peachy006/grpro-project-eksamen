@@ -1,3 +1,5 @@
 10
 rabbit 10
-grass 50
+grass 10
+wolf 10
+bear 5
