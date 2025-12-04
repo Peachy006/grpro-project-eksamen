@@ -3,6 +3,8 @@ import itumulator.executable.*;
 import itumulator.simulator.themeOne.Burrow;
 import itumulator.simulator.themeOne.Grass;
 import itumulator.simulator.themeOne.Rabbit;
+import itumulator.simulator.themeTwo.Bear;
+import itumulator.simulator.themeTwo.Bush;
 import itumulator.simulator.themeTwo.Wolf;
 import itumulator.world.Location;
 import itumulator.world.World;
@@ -14,10 +16,6 @@ import java.util.HashMap;
 import java.util.Random;
 
 
-
-//TODO fix the rabbit act logic
-//TODO assign burrows to bunny based on distance instead of random
-//TODO did i remember to remove rabbits from burrows
 
 public class Main {
 
@@ -102,6 +100,16 @@ public class Main {
             }
             case("wolf"): {
                 entity = new Wolf(packID);
+                isBlocking = true;
+                break;
+            }
+            case("bear"): {
+                entity = new Bear();
+                isBlocking = true;
+                break;
+            }
+            case("bush"): {
+                entity = new Bush();
                 isBlocking = true;
                 break;
             }

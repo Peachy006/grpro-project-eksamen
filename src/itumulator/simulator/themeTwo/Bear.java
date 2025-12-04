@@ -30,6 +30,11 @@ public class Bear extends Predator implements Actor, DynamicDisplayInformationPr
 
     @Override
     public void act(World w) {
+
+        if(!w.contains(this)) {
+            return;
+        }
+
         age(w);
         Location l = w.getLocation(this);
         if(territory != null) {
@@ -64,6 +69,11 @@ public class Bear extends Predator implements Actor, DynamicDisplayInformationPr
 
     @Override
     public void hunt(World w) {
+
+        if(!w.contains(this) || !w.isOnTile(this)) {
+            return;
+        }
+
         Set<Location> tiles = w.getSurroundingTiles(w.getLocation(this));
         Set<Animal> nearbyPrey = w.getAll(Animal.class, tiles);
 

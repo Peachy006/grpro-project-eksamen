@@ -27,7 +27,7 @@ public abstract class Predator extends Animal {
     }
 
     // this kills animal its hunting
-    // make sure that Preditiors dont eat preditors
+    // make sure that predators dont eat predators
     public void hunt(World w, Animal target) {
 
         int gainEnergy = target.getEnergy();

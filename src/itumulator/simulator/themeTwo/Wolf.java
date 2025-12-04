@@ -18,7 +18,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
     protected int packID;
     protected ArrayList<Wolf> wolfPack;
     protected boolean hasPack;
-    protected int lookForPackRadius = 2;
+    protected int lookForPackRadius = 1;
 
     public Wolf(int packID) {
         super(200, 0);
@@ -155,7 +155,11 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
             if (target instanceof Prey) {
                 super.hunt(w, target);
                 return;
-            } else if (target instanceof Predator && ((Wolf) target).getPackID() != this.packID) {
+            } else if (target instanceof Wolf && ((Wolf) target).getPackID() != this.packID) {
+                super.attack(target);
+                return;
+            } else if (target instanceof Predator && !(target instanceof Wolf)) {
+                // Attack other predators that aren't wolves (like Bears)
                 super.attack(target);
                 return;
             }
