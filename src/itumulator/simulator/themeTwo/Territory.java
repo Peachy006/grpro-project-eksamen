@@ -31,37 +31,39 @@ public class Territory {
     /// move random movement code from animal but with territory
     // moves randomly in territory
     // if animal is outside its territory move twoards it
-    public void moveInTerritory(World w, Animal a) {
-        Location l = w.getLocation(a);
+    public void moveInTerritory(World w, Animal thisAnimal) {
+        Location animalLocation = w.getLocation(thisAnimal);
 
-        if (world.contains(l)) {
-            Set<Location> emptyNeighbours = w.getEmptySurroundingTiles(w.getLocation(a));
-
-            if (emptyNeighbours != null ) {
-                ArrayList<Location> neighboursList = new ArrayList<>(emptyNeighbours);
-
-                Random r = new Random();
-
-                Location newLocation = neighboursList.get(r.nextInt(neighboursList.size()));
-
-                //reroll if it is not moving on its territory
-                if(emptyNeighbours.isEmpty()) {
-                    while (!world.contains(newLocation)) {
-
-                        //remove tile that cant be used from the list
-                        neighboursList.remove(newLocation);
-                        newLocation = neighboursList.get(r.nextInt(neighboursList.size()));
-                    }
-                } else {
-                    newLocation = l;
-                }
-
-                w.move(a, newLocation);
-                w.setCurrentLocation(newLocation);
-            }
-        } else {
-            a.moveTowards(w,l,spawnLocation);
+        // If outside territory, move towards spawn location
+        if (!territory.contains(animalLocation)) {
+            thisAnimal.moveTowards(w, animalLocation, spawnLocation);
+            return;
         }
+
+        //get empty neighbors that are within territory
+        Set<Location> emptyNeighbours = w.getEmptySurroundingTiles(animalLocation);
+        
+        if (emptyNeighbours.isEmpty()) {
+            return; //cant move, so stay  in place
+        }
+        
+        //filter to only neighbors within territory
+        ArrayList<Location> validMoves = new ArrayList<>();
+        for (Location l : emptyNeighbours) {
+            if (territory.contains(l)) {
+                validMoves.add(l);
+            }
+        }
+        
+        // If no valid moves within territory then stay in place
+        if (validMoves.isEmpty()) {
+            return;
+        }
+        
+        //move to random location
+        Random r = new Random();
+        Location newLocation = validMoves.get(r.nextInt(validMoves.size()));
+        w.move(thisAnimal, newLocation);
     }
 
     public Set<Animal> getTrespassers() {
@@ -71,7 +73,7 @@ public class Territory {
         for (Location temp : territory) {
             Object o = world.getTile(temp);
 
-            // if object is a animal add it to the list
+            // if object is an animal add it to the list
             if (o instanceof Animal) {
                 trespassers.add((Animal) o);
             }
