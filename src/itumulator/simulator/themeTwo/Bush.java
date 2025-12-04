@@ -13,12 +13,13 @@ public class Bush implements DynamicDisplayInformationProvider, Actor {
     protected boolean hasBerries;
     protected int berryCount;
     protected int berryCountMax;
-
+    protected int growCount;
 
     public Bush() {
         this.hasBerries = true;
         this.berryCount = 10;
         this.berryCountMax = 10;
+        this.growCount = 0;
     }
 
 
@@ -29,8 +30,22 @@ public class Bush implements DynamicDisplayInformationProvider, Actor {
     }
 
     public void act(World w) {
-
+        if(!this.hasBerries) {
+            growCount++;
+            if(growCount >= 8) {
+                berryCount = berryCountMax;
+                growCount = 0;
+                this.hasBerries = true;
+            }
+        }
     }
-
-
+    
+   public void eatBerry() {
+       if(this.berryCount > 0) {
+           this.berryCount--;
+           if(this.berryCount == 0) {
+               this.hasBerries = false;
+           }
+       }
+   }
 }

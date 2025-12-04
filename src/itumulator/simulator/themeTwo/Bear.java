@@ -63,7 +63,15 @@ public class Bear extends Predator implements Actor, DynamicDisplayInformationPr
     }
 
 
-    public void eat() {
-        // make bushes to eat
-    }
+   public void eat(World w) {
+       Location l = w.getLocation(this);
+       Set<Location> neighbors = w.getSurroundingTiles(l);
+       
+       for(Location loc : neighbors) {
+           if(w.getTile(loc) instanceof Bush bush) {
+               bush.eatBerry();
+               this.energy += 5;
+           }
+       }
+   }
 }
