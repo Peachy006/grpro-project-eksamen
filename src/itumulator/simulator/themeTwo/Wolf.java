@@ -9,27 +9,30 @@ import itumulator.world.World;
 import itumulator.executable.DisplayInformation;
 import java.awt.Color;
 import java.util.*;
-
+// todo: worlf hule
+// todo: add pack
+// todo: reproduve in hule
+// todo: class
 
 public class Wolf extends Predator implements Actor, DynamicDisplayInformationProvider {
     protected boolean isRemoved = false;
     protected Random random = new Random();
 
     protected int packID;
+    protected Pack packs;
     protected ArrayList<Wolf> wolfPack;
     protected boolean hasPack;
-    protected int lookForPackRadius = 1;
+    protected int lookForPackRadius; // controls how tight the pack is
 
     public Wolf(int packID) {
         super(200, 0);
         this.packID = packID;
-        wolfPack = new ArrayList<Wolf>();
         hasPack = false;
+        lookForPackRadius = 1;
+        wolfPack = new ArrayList<Wolf>();
+        this.packs = Pack.getInstance();
     }
 
-    public int getPackID() {
-        return packID;
-    }
 
     @Override
     public DisplayInformation getInformation() {
@@ -39,55 +42,39 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
 
     @Override
     public void act(World w) {
+        // if wolf does not have a pack find one
+        if(!hasPack) {
+            findPack();
+        }
 
-        this.updatePack(w);
+        //update pack
+        if(hasPack) {
+            wolfPack = packs.getPack(this);
+        }
 
         if (!isRemoved) {
             age(w);
             
             Location currentLocation = w.getLocation(this);
 
+
+            moveWithPack(w, currentLocation);
+
+
             //Wolf tries to hunt
             hunt(w);
 
-            // move with pack
-            moveWithPackTest(w, currentLocation);
-
-            // dies when energy is lower then 10
+            // when energy <= 10 it dies and is removed from the pack
             if (energy <= 10 && !isRemoved) {
-                wolfPack.remove(this);
+                packs.removeFromPack(this);
                 w.delete(this);
                 isRemoved = true;
             }
         }
     }
 
-    public boolean moveWithPack(World w, Location currentLocation) {
-        //Looks for wolves in pack
-        Set<Location> searchPack = w.getSurroundingTiles(currentLocation, lookForPackRadius);
-        Set<Wolf> nearbyWolves = w.getAll(Wolf.class, searchPack);
-
-        ArrayList<Wolf> wolvesPack = new ArrayList<>();
-        for (Wolf wolf : nearbyWolves) {
-            if (wolf == this) {
-                continue;
-            }
-            if (wolf.getPackID() == this.packID) {
-                wolvesPack.add(wolf);
-            }
-        }
-        if (wolvesPack.isEmpty()) {
-            return false;
-        }
-        Wolf targetWolf = wolvesPack.get(random.nextInt(wolvesPack.size()));
-
-        Location targetLocation = w.getLocation(targetWolf);
-
-        return moveTowards(w, currentLocation, targetLocation);
-    }
-
     // picks a random wolf and ether moves towards it or randomly around it
-    public void moveWithPackTest(World w, Location currentLocation) {
+    public void moveWithPack(World w, Location currentLocation) {
         boolean moved = false;
 
         // if there are wolf's in pack
@@ -121,30 +108,6 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         }
     }
 
-    /// updatePack has been added so that the pack can be updatede in more places
-    /// EX if a wolf reproduces it needs to be updatede
-    /// this would be simpler if we made a new class for packs
-
-    // updates wolf pack(Arraylist) according to packID
-    public void updatePack(World w) {
-        // first remove wolves that no longer exist in the world
-        wolfPack.removeIf(wolf -> !w.contains(wolf));
-    
-        // takes all tiles on the map and makes a set of all wolf's on the map
-        Set<Location> tiles = w.getSurroundingTiles(w.getLocation(this), w.getSize());
-        Set<Wolf> wolves = w.getAll(Wolf.class, tiles);
-
-        // if there's wolf's in pack
-        if (!wolves.isEmpty()) {
-            // add wolf's with the same packID (only if not already in pack)
-            for (Wolf wolf : wolves) {
-                if (wolf.getPackID() == this.packID && !wolfPack.contains(wolf)) {
-                    wolfPack.add(wolf);
-                }
-            }
-        }
-    }
-
     // takes a random animal in its radius and ehter eats it or attacks it
     public void hunt(World w) {
         Set<Location> tiles = w.getSurroundingTiles(w.getLocation(this));
@@ -164,5 +127,19 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
                 return;
             }
         }
+    }
+
+    // finds the pack controller and adds itself to a pack
+    public void findPack() {
+        packs.addToPack(this);
+        hasPack = true;
+    }
+
+    public boolean hasPack() {
+        return hasPack;
+    }
+
+    public int getPackID() {
+        return packID;
     }
 }
