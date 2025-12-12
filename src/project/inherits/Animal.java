@@ -22,7 +22,7 @@ public abstract class Animal {
         r = new Random();
     }
 
-    protected void age(World w) {
+    protected boolean age(World w) {
         dayCount++;
         if(dayCount >= 5) {
             this.age++;
@@ -35,8 +35,10 @@ public abstract class Animal {
             
             if (totalEnergy <= 10 || energy <= 10) {
                 w.delete(this);
+                return true;
             }
         }
+        return false;
 
     }
 
