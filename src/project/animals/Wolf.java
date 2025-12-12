@@ -107,7 +107,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
     public void moveWithPack(World w, Location currentLocation) {
 
         // if pack is not empty
-        if (!wolfPack.isEmpty() && wolfPack.size() >= 2) {
+        if (!wolfPack.isEmpty() && wolfPack.size() >= 2 && hasPack) {
 
             //pick a random wolf's location from the pack
             Wolf targetWolf = wolfPack.get(random.nextInt(wolfPack.size()));
