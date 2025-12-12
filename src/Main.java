@@ -108,7 +108,7 @@ public class Main {
                 isBlocking = true;
                 break;
             }
-            case("bush"): {
+            case("berry"): {
                 entity = new Bush();
                 isBlocking = true;
                 break;

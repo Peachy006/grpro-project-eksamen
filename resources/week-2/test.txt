@@ -3,4 +3,4 @@ rabbit 10
 grass 10
 wolf 3
 bear 2
-bush 5
+berry 5

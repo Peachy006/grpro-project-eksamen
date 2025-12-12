@@ -35,7 +35,9 @@ public class Bear extends Predator implements Actor, DynamicDisplayInformationPr
             return;
         }
 
-        age(w);
+        if(age(w)) {
+            return;
+        }
         Location l = w.getLocation(this);
         if(territory != null) {
             this.trespassers = territory.getTrespassers();
