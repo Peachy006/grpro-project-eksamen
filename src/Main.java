@@ -16,8 +16,6 @@ import java.util.HashMap;
 import java.util.Random;
 
 
-// todo: ryk filer ud fra simulator
-//
 
 public class Main {
 
