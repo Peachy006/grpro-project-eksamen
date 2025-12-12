@@ -59,10 +59,10 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
     @Override
     public void act(World w) {
 
+        age(w);
+
         if (!isRemoved) {
             Location currentLocation = w.getLocation(this);
-
-            age(w);
 
             if(hasPack) {
                 wolfPack = packs.getPack(packID);
@@ -105,17 +105,14 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
     // picks a random wolf and ether moves towards it or randomly around it
     // if its in heat go in den
     public void moveWithPack(World w, Location currentLocation) {
+        ArrayList<Wolf> temp = packs.getPack(packID);
 
         // if pack is not empty
-        if (!wolfPack.isEmpty() && wolfPack.size() >= 2 && hasPack) {
+        if (temp.size() >= 2 && hasPack) {
+            temp.remove(this);
 
             //pick a random wolf's location from the pack
-            Wolf targetWolf = wolfPack.get(random.nextInt(wolfPack.size()));
-
-            // if pointing to itself pick another wolf untill it finds another
-            while (targetWolf == this) {
-                targetWolf = wolfPack.get(random.nextInt(wolfPack.size()));
-            }
+            Wolf targetWolf = temp.get(random.nextInt(temp.size()));
 
             Location targetWolfL = w.getLocation(targetWolf);
 
@@ -150,9 +147,6 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         } else { // else move somewhere else
             moveTowards(w, currentLocation, denLocation);
         }
-
-        System.out.println("Current location: " + currentLocation);
-        System.out.println("den location: " + denLocation);
     }
 
     // takes a random animal in its radius and ehter eats it or attacks it
