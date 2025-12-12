@@ -1,5 +1,6 @@
-package itumulator.executable;
+package ourcode;
 
+import itumulator.executable.EntityConfig;
 import itumulator.world.Location;
 
 import java.io.*;

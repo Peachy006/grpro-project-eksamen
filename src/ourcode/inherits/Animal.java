@@ -1,5 +1,5 @@
 
-package itumulator.simulator;
+package ourcode.inherits;
 
 import itumulator.world.World;
 import itumulator.world.Location;

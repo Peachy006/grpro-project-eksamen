@@ -1,15 +1,15 @@
 
 import itumulator.executable.*;
-import itumulator.simulator.themeOne.Burrow;
-import itumulator.simulator.themeOne.Grass;
-import itumulator.simulator.themeOne.Rabbit;
-import itumulator.simulator.themeTwo.Bear;
-import itumulator.simulator.themeTwo.Bush;
-import itumulator.simulator.themeTwo.Wolf;
+import ourcode.InputReader;
+import ourcode.structures.Burrow;
+import ourcode.animals.Grass;
+import ourcode.animals.Rabbit;
+import ourcode.animals.Bear;
+import ourcode.plants.Bush;
+import ourcode.animals.Wolf;
 import itumulator.world.Location;
 import itumulator.world.World;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;

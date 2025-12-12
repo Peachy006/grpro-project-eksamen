@@ -1,10 +1,8 @@
-package itumulator.simulator.themeTwo;
-
-import itumulator.simulator.*;
+package ourcode.inherits;
 
 import itumulator.world.World;
+import ourcode.animals.Wolf;
 
-import java.awt.event.ActionListener;
 import java.util.*;
 
 

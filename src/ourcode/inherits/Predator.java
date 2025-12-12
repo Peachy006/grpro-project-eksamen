@@ -1,11 +1,6 @@
-package itumulator.simulator;
+package ourcode.inherits;
 
-import itumulator.simulator.themeOne.Rabbit;
-import itumulator.simulator.themeTwo.*;
 import itumulator.world.*;
-
-
-import java.util.Set;
 
 public abstract class Predator extends Animal {
 

@@ -1,9 +1,8 @@
-package itumulator.simulator.themeTwo;
+package ourcode.plants;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.world.World;
-import itumulator.world.Location;
 import itumulator.simulator.Actor;
 
 import java.awt.*;

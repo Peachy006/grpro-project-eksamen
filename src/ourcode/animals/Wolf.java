@@ -1,12 +1,15 @@
-package itumulator.simulator.themeTwo;
+package ourcode.animals;
 
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
-import itumulator.simulator.*;
-import itumulator.simulator.themeOne.Rabbit;
+import ourcode.inherits.Animal;
+import ourcode.inherits.Pack;
 import itumulator.world.Location;
 import itumulator.world.World;
 import itumulator.executable.DisplayInformation;
+import ourcode.inherits.Predator;
+import ourcode.inherits.Prey;
+
 import java.awt.Color;
 import java.util.*;
 // todo: worlf hule
