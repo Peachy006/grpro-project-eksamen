@@ -1,12 +1,12 @@
-package itumulator.simulator.themeTwo;
+package project.inherits;
 
 import itumulator.simulator.*;
 
 import itumulator.world.World;
+import project.animals.Wolf;
 
 import java.awt.event.ActionListener;
 import java.util.*;
-
 
 
 public class Pack {
@@ -23,25 +23,29 @@ public class Pack {
     public void addToPack(Wolf w) {
         int id = w.getPackID();
 
-        // if id allready exists add it to the pack list
-        if (packs.containsKey(id)) {
-            packs.get(id).add(w);
+        if (!w.isRemoved) {
+            // if id allready exists add it to the pack list
+            if (packs.containsKey(id)) {
+                packs.get(id).add(w);
 
-        } else { // else make a new pack and add it to the set
-            ArrayList<Wolf> list = new ArrayList<>();
-            list.add(w);
-            packs.put(id, list);
+            } else { // else make a new pack and add it to the set
+                ArrayList<Wolf> list = new ArrayList<>();
+                list.add(w);
+                packs.put(id, list);
+            }
         }
     }
 
-    public void removeFromPack(Wolf w) {packs.get(w.getPackID()).remove(w);}
-
-
-    public ArrayList<Wolf> getPack(Wolf w) {
-        return packs.get(w.getPackID());
+    public void removeFromPack(Wolf w) {
+        packs.get(w.getPackID()).remove(w);
     }
 
-    // this method does so only one Packs class is instanciatede at a time
+
+    public ArrayList<Wolf> getPack(int ID) {
+        return packs.get(ID);
+    }
+
+    // this method does so only one Pack class is instanciatede at a time
     // when called as a static(it can be called upon wherever), it checks on weather this class exists
     // if it dosnt it makes one, if it does it just returns the class
     public static Pack getInstance() {
@@ -50,6 +54,5 @@ public class Pack {
         }
         return instance;
     }
-
 
 }

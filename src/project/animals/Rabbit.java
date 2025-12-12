@@ -1,12 +1,13 @@
-package itumulator.simulator.themeOne;
+package project.animals;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
-import itumulator.simulator.Animal;
-import itumulator.simulator.Prey;
+import project.inherits.Prey;
 import itumulator.world.World;
 import itumulator.world.Location;
+import project.plants.Grass;
+import project.structures.Burrow;
 
 import java.awt.*;
 import java.util.*;

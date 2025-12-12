@@ -1,13 +1,14 @@
-package itumulator.simulator.themeTwo;
+package project.animals;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
-import itumulator.simulator.Animal;
-import itumulator.simulator.Predator;
-import itumulator.simulator.Prey;
+import project.inherits.Animal;
+import project.inherits.Predator;
+import project.inherits.Prey;
 import itumulator.world.World;
 import itumulator.world.Location;
+import project.plants.Bush;
 
 
 import java.awt.*;
@@ -16,10 +17,12 @@ import java.util.*;
 public class Bear extends Predator implements Actor, DynamicDisplayInformationProvider{
 
     Set<Animal> trespassers;
+    protected int maxEnergy;
 
 
     public Bear() {
         super(200,0);
+        this.maxEnergy = 200;
     }
 
 
@@ -52,7 +55,7 @@ public class Bear extends Predator implements Actor, DynamicDisplayInformationPr
         }
 
         // if its hungry start hunting
-        hunting = energy < 100;
+        hunting = energy < maxEnergy / 2;
 
 
         // make random move within territory if not hunting

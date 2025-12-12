@@ -1,14 +1,14 @@
-package itumulator.simulator.themeOne;
+package project.structures;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
+import project.animals.Rabbit;
 
 import java.awt.Color;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 public class Burrow implements Actor, NonBlocking, DynamicDisplayInformationProvider {

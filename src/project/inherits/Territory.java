@@ -1,7 +1,5 @@
-package itumulator.simulator.themeTwo;
+package project.inherits;
 
-import itumulator.simulator.Actor;
-import itumulator.simulator.Animal;
 import itumulator.world.Location;
 import itumulator.world.World;
 

@@ -1,8 +1,4 @@
-package itumulator.simulator;
-
-import itumulator.simulator.*;
-import itumulator.world.Location;
-import itumulator.world.World;
+package project.inherits;
 
 public abstract class Prey extends Animal {
 

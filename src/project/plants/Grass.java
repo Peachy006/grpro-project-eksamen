@@ -1,4 +1,4 @@
-package itumulator.simulator.themeOne;
+package project.plants;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;

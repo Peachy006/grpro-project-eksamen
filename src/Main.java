@@ -1,21 +1,23 @@
 
 import itumulator.executable.*;
-import itumulator.simulator.themeOne.Burrow;
-import itumulator.simulator.themeOne.Grass;
-import itumulator.simulator.themeOne.Rabbit;
-import itumulator.simulator.themeTwo.Bear;
-import itumulator.simulator.themeTwo.Bush;
-import itumulator.simulator.themeTwo.Wolf;
+import project.InputReader;
+import project.structures.Burrow;
+import project.plants.Grass;
+import project.animals.Rabbit;
+import project.animals.Bear;
+import project.plants.Bush;
+import project.animals.Wolf;
 import itumulator.world.Location;
 import itumulator.world.World;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
 
+// todo: ryk filer ud fra simulator
+//
 
 public class Main {
 
