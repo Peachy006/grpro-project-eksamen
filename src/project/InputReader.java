@@ -1,4 +1,4 @@
-package ourcode;
+package project;
 
 import itumulator.executable.EntityConfig;
 import itumulator.world.Location;

@@ -1,7 +1,7 @@
-package ourcode.inherits;
+package project.inherits;
 
 import itumulator.world.World;
-import ourcode.animals.Wolf;
+import project.animals.Wolf;
 
 import java.util.*;
 

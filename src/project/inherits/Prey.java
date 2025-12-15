@@ -1,4 +1,4 @@
-package ourcode.inherits;
+package project.inherits;
 
 public abstract class Prey extends Animal {
 

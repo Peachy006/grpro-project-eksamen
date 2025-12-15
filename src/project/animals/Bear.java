@@ -1,12 +1,11 @@
-package ourcode.animals;
+package project.animals;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
-import ourcode.inherits.Animal;
-import ourcode.inherits.Predator;
-import ourcode.inherits.Prey;
-import ourcode.plants.Bush;
+import project.inherits.Animal;
+import project.inherits.Predator;
+import project.plants.Bush;
 import itumulator.world.World;
 import itumulator.world.Location;
 

@@ -1,15 +1,14 @@
-package ourcode.animals;
+package project.animals;
 
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
-import ourcode.inherits.Animal;
-import ourcode.inherits.Pack;
+import project.inherits.Animal;
+import project.inherits.Pack;
 import itumulator.world.Location;
 import itumulator.world.World;
 import itumulator.executable.DisplayInformation;
-import ourcode.inherits.Predator;
-import ourcode.inherits.Prey;
-import ourcode.structures.WolfBurrow;
+import project.inherits.Predator;
+import project.structures.WolfBurrow;
 
 import java.awt.Color;
 import java.util.*;

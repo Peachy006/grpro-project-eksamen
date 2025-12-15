@@ -1,8 +1,8 @@
-package ourcode.inherits;
+package project.inherits;
 
 import itumulator.world.Location;
 import itumulator.world.World;
-import ourcode.animals.Carcass;
+import project.animals.Carcass;
 
 import java.util.Set;
 

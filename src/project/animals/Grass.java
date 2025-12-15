@@ -1,4 +1,4 @@
-package ourcode.animals;
+package project.animals;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;

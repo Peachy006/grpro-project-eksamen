@@ -1,11 +1,11 @@
-package ourcode.animals;
+package project.animals;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
 import itumulator.world.Location;
 import itumulator.world.World;
-import ourcode.plants.Fungi;
+import project.plants.Fungi;
 
 import java.awt.*;
 

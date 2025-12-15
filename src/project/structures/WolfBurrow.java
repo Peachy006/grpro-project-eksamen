@@ -1,11 +1,11 @@
-package ourcode.structures;
+package project.structures;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
-import ourcode.animals.Wolf;
+import project.animals.Wolf;
 
 import java.awt.*;
 import java.util.HashSet;

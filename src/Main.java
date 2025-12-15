@@ -1,9 +1,9 @@
 
 import itumulator.executable.*;
-import ourcode.InputReader;
-import ourcode.animals.*;
-import ourcode.structures.Burrow;
-import ourcode.plants.Bush;
+import project.InputReader;
+import project.animals.*;
+import project.structures.Burrow;
+import project.plants.Bush;
 import itumulator.world.Location;
 import itumulator.world.World;
 

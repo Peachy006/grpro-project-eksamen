@@ -1,4 +1,4 @@
-package ourcode.inherits;
+package project.inherits;
 
 import itumulator.world.Location;
 import itumulator.world.World;
