@@ -2,6 +2,7 @@
 import itumulator.executable.*;
 import project.InputReader;
 import project.animals.*;
+import project.plants.Grass;
 import project.structures.Burrow;
 import project.plants.Bush;
 import itumulator.world.Location;

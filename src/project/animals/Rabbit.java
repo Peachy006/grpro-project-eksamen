@@ -4,6 +4,7 @@ import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
 import project.inherits.Prey;
+import project.plants.Grass;
 import project.structures.Burrow;
 import itumulator.world.World;
 import itumulator.world.Location;

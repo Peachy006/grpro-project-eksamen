@@ -2,19 +2,19 @@ package Test;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.EntityConfig;
-import project.InputReader;
 import itumulator.executable.Program;
-import project.structures.Burrow;
-import project.animals.Grass;
-import project.animals.Rabbit;
-import project.animals.Bear;
-import project.animals.Wolf;
 import itumulator.world.Location;
 import itumulator.world.World;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import project.InputReader;
+import project.animals.Bear;
+import project.structures.Burrow;
+import project.animals.Rabbit;
+import project.animals.Wolf;
+import project.plants.Grass;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -272,8 +272,83 @@ public class ThemeOneTests {
         p.simulate();
 
         assertFalse(w.contains(rabbit));
+        assertTrue(w.isTileEmpty(startLocation));
+
     }
 
+    //ThemeTwo testing
+
+    @Test //This test is not needed but nice to have because we know from "Rabbit" that Blocking objects is placed randomly on map
+    void DoesWolfPlaceRandomlyOnMap() {
+        int wolvesPlaced = 10000;
+        Map<Location, Integer> placementCounts = new HashMap<>();
+        for (int i = 0; i < wolvesPlaced; i++) {
+            Wolf wolf = new Wolf(1, false);
+
+            setElement(w, wolf, size);
+
+            Location location = w.getLocation(wolf);
+            placementCounts.put(location, placementCounts.getOrDefault(location, 0) + 1);
+            w.remove(wolf);
+        }
+
+        int Totaltiles = size * size;
+        double expectedAverage = (double) Totaltiles / wolvesPlaced;
+        double deviation = expectedAverage * 0.20;
+        int outsideDeviation = 0;
+
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                Location l = new Location(x, y);
+                int count = placementCounts.getOrDefault(l, 0);
+                if (Math.abs(count - expectedAverage) > deviation) {
+                    outsideDeviation++;
+                }
+            }
+        }
+
+        double percentageOutsideDeviation = (double) outsideDeviation / wolvesPlaced;
+        assertTrue(percentageOutsideDeviation < 0.05);
+
+    }
+
+
+    @Test
+    void DoesWolfHuntWorkAsIntended() {
+
+        Location wolflocation = new Location(2, 2);
+        Location rabbitLocation = new Location(2, 3);
+
+        Wolf wolf = new Wolf(1, false);
+        int wolfStartEnergy = 50;
+        wolf.setEnergy(wolfStartEnergy);
+        int wolfTotalEnergyCapacity = 150;
+
+        Rabbit rabbit = new Rabbit(false);
+        int rabbitStartEnergy = 50;
+        rabbit.setEnergy(rabbitStartEnergy);
+
+        w.setTile(wolflocation, wolf);
+        w.setTile(rabbitLocation, rabbit);
+
+        int gainEnergyFromRabbit = rabbitStartEnergy;
+        int wolfMoveCostAndAgeCost = 20;
+
+        int netExceptedEnergy = (wolfStartEnergy + gainEnergyFromRabbit) - wolfMoveCostAndAgeCost;
+        int finalExcptedEnergy = Math.min(netExceptedEnergy, wolfTotalEnergyCapacity);
+
+        p.simulate();
+
+        assertFalse(w.contains(rabbit));
+
+        int finalWolfEnergy = wolf.getEnergy();
+        assertTrue(finalWolfEnergy > wolfStartEnergy);
+        assertEquals(finalExcptedEnergy, finalWolfEnergy);
+
+    }
+
+
+    //Input TESTS
     @Test
     void TestIfWorldMatchInput() throws IOException {
 
@@ -298,14 +373,13 @@ public class ThemeOneTests {
 
         assertEquals(expectedSize, reader.getSize());
 
-        int nextPackID = 1;
-        
+
         for (String type : configMap.keySet()) {
             ArrayList<EntityConfig> configurations = configMap.get(type);
-            
-            for(EntityConfig information : configurations) {
+
+            for (EntityConfig information : configurations) {
                 int spawnCount;
-                if(information.getSpawnAmount().size() == 2) {
+                if (information.getSpawnAmount().size() == 2) {
                     int min = information.getSpawnAmount().get(0);
                     int max = information.getSpawnAmount().get(1);
 
@@ -313,21 +387,29 @@ public class ThemeOneTests {
                 } else {
                     spawnCount = information.getSpawnAmount().get(0);
                 }
-                switch(type) {
-                    case "grass": grassCount += spawnCount; break;
-                    case "wolf": wolfCount += spawnCount; break;
-                    case "burrow": burrowCount += spawnCount; break;
-                    case "rabbit": rabbitCount += spawnCount; break;
-                    case "bear": bearCount += spawnCount; break;
-                    case "bush": bushCount += spawnCount; break;
+                switch (type) {
+                    case "grass":
+                        grassCount += spawnCount;
+                        break;
+                    case "wolf":
+                        wolfCount += spawnCount;
+                        break;
+                    case "burrow":
+                        burrowCount += spawnCount;
+                        break;
+                    case "rabbit":
+                        rabbitCount += spawnCount;
+                        break;
+                    case "bear":
+                        bearCount += spawnCount;
+                        break;
+                    case "bush":
+                        bushCount += spawnCount;
+                        break;
 
                 }
-                for(int i = 0; i < spawnCount; i++) {
-                    createAndPlaceElementWithPackID(w, type, information.getSpawnLocation(), reader.getSize(), nextPackID);
-                }
-                
-                if(type.equals("wolf")) {
-                    nextPackID++;
+                for (int i = 0; i < spawnCount; i++) {
+                    createAndPlaceElement(w, type, information.getSpawnLocation(), reader.getSize());
                 }
             }
         }
@@ -341,21 +423,21 @@ public class ThemeOneTests {
         int actualBushCount = 0;
         int actualRabbitCount = 0;
 
-        for(int x = 0; x < w.getSize(); x++) {
-            for(int y = 0; y < w.getSize(); y++) {
+        for (int x = 0; x < w.getSize(); x++) {
+            for (int y = 0; y < w.getSize(); y++) {
                 Location l = new Location(x, y);
 
-                if(w.containsNonBlocking(l)) {
+                if (w.containsNonBlocking(l)) {
                     Object entity = w.getNonBlocking(l);
                     if (entity instanceof Grass) actualGrassCount++;
                     if (entity instanceof Burrow) actualBurrowCount++;
-                   // if (entity instanceof Bush)  actualBushCount++;
+                    // if (entity instanceof Bush)  actualBushCount++;
                 }
-                if(!w.isTileEmpty(l)) {
+                if (!w.isTileEmpty(l)) {
                     Object entity = w.getTile(l);
-                    if(entity instanceof Wolf) actualWolfCount++;
+                    if (entity instanceof Wolf) actualWolfCount++;
                     if (entity instanceof Rabbit) actualRabbitCount++;
-                    if (entity instanceof Bear)  actualBearCount++;
+                    if (entity instanceof Bear) actualBearCount++;
                 }
             }
         }
@@ -368,7 +450,41 @@ public class ThemeOneTests {
         assertEquals(rabbitCount, actualRabbitCount);
     }
 
-    // -- Helper Methods
+
+    @Test
+        // Test if Bear's actually gets placed in world, more specific test and can be reused to test other Elements
+    void TestIfBearIsInWorld() {
+        String bearType = "bear";
+        int initialEnitityCount = w.getEntities().size();
+        Location specificLocation = null;
+
+        createAndPlaceElement(w, bearType, specificLocation, w.getSize());
+        int actualBearCount = w.getEntities().size();
+        assertEquals(initialEnitityCount + 1, actualBearCount);
+
+        boolean bearFound =  false;
+        for (int x = 0; x < w.getSize(); x++) {
+            for (int y = 0; y < w.getSize(); y++) {
+                Location l = new Location(x, y);
+
+                Object entity = w.getTile(l);
+
+                if (entity != null) {
+                    if (entity instanceof Bear) {
+                        bearFound = true;
+                        assertEquals(Bear.class, entity.getClass());
+
+                        break;
+                    }
+                }
+            }
+            if(bearFound) break;
+        }
+        assertTrue(bearFound);
+    }
+
+
+    // --- Helper Methods ---
 
 
     public static void setElement(World w, Object o, int size) {
@@ -404,28 +520,28 @@ public class ThemeOneTests {
         boolean isBlocking = true;
 
 
-        switch(type) {
-            case("grass"): {
+        switch (type) {
+            case ("grass"): {
                 entity = new Grass();
                 isBlocking = false;
                 break;
             }
-            case("burrow"): {
+            case ("burrow"): {
                 entity = new Burrow(burrowDefaultSize);
                 isBlocking = false;
                 break;
             }
-            case("rabbit"): {
+            case ("rabbit"): {
                 entity = new Rabbit(false);
                 isBlocking = true;
                 break;
             }
-            case("wolf"): {
+            case ("wolf"): {
                 entity = new Wolf(1, false);
                 isBlocking = true;
                 break;
             }
-            case("bear"): {
+            case ("bear"): {
                 entity = new Bear(false);
                 isBlocking = true;
                 break;
@@ -436,61 +552,11 @@ public class ThemeOneTests {
             }
         }
 
-        if(entity == null) return;
-        if(specificLocation != null) {
+        if (entity == null) return;
+        if (specificLocation != null) {
             w.setTile(specificLocation, entity);
         } else {
-            if(isBlocking) {
-                setElement(w, entity, size);
-            } else {
-                setNonBlockingElement(w, entity, size);
-            }
-        }
-    }
-    
-    public static void createAndPlaceElementWithPackID(World w, String type, Location specificLocation, int size, int packID) {
-
-        Object entity = null;
-        boolean isBlocking = true;
-
-
-        switch(type) {
-            case("grass"): {
-                entity = new Grass();
-                isBlocking = false;
-                break;
-            }
-            case("burrow"): {
-                entity = new Burrow(burrowDefaultSize);
-                isBlocking = false;
-                break;
-            }
-            case("rabbit"): {
-                entity = new Rabbit(false);
-                isBlocking = true;
-                break;
-            }
-            case("wolf"): {
-                entity = new Wolf(packID, false);
-                isBlocking = true;
-                break;
-            }
-            case("bear"): {
-                entity = new Bear(false);
-                isBlocking = true;
-                break;
-            }
-
-            default: {
-                System.out.println("Invalid entity type");
-            }
-        }
-
-        if(entity == null) return;
-        if(specificLocation != null) {
-            w.setTile(specificLocation, entity);
-        } else {
-            if(isBlocking) {
+            if (isBlocking) {
                 setElement(w, entity, size);
             } else {
                 setNonBlockingElement(w, entity, size);
