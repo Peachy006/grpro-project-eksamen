@@ -111,7 +111,7 @@ public abstract class Animal {
         return false;
     }
 
-    protected void killThisAnimal(World w, boolean isLargeAnimal) {
+    public void killThisAnimal(World w, boolean isLargeAnimal) {
 
         if(this.hasFungi) {
             w.delete(this);
@@ -130,6 +130,8 @@ public abstract class Animal {
     public int getTotalEnergy() {return totalEnergy;}
 
     public void setTotalEnergy(int totalEnergy) {this.totalEnergy = totalEnergy;}
+
+    public boolean hasFungi() { return hasFungi; }
 
     public int getAge() {return age;}
 
