@@ -8,11 +8,13 @@ import itumulator.world.World;
 import project.animals.Carcass;
 
 import java.awt.*;
+import java.util.Random;
 import java.util.Set;
 
 public class Fungi implements Actor, DynamicDisplayInformationProvider {
 
     protected int lifespan;
+    Random r = new Random();
 
     public Fungi(String size) {
         if(size.equals("large")) lifespan = 9;
@@ -30,8 +32,11 @@ public class Fungi implements Actor, DynamicDisplayInformationProvider {
         lookForOtherCarcassesToSpreadTo(w);
         if(lifespan <= 0){
             if (!w.contains(this) || !w.isOnTile(this)) return;
+            Location l = w.getLocation(this);
 
             w.remove(this);
+            fungiTriesToGrowGrass(w, l);
+
         }
     }
 
@@ -49,6 +54,14 @@ public class Fungi implements Actor, DynamicDisplayInformationProvider {
                     carcass.setHasFungi(true);
                 }
             }
+        }
+    }
+
+    public void fungiTriesToGrowGrass(World w, Location loc) {
+        if(w == null) return;
+        Set<Location> neighbours = w.getSurroundingTiles(loc);
+        for(Location l : neighbours) {
+            if(w.getNonBlocking(l) == null && r.nextDouble(1) > 0.8) {}
         }
     }
 }

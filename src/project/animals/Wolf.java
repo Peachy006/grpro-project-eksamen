@@ -25,18 +25,17 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
     protected boolean hasBurrow = false;
     protected WolfBurrow burrow;
     protected int intercourseDelayTimer = 0;
-    protected Pack packs;
+    protected Pack thisWolfsPack;
     protected ArrayList<Wolf> wolfPack;
     protected boolean hasPack;
-    protected int lookForPackRadius; // controls how tight the pack is
+    protected int lookForPackRadius = 1; // controls how tight the pack is
 
     public Wolf(int packID, boolean hasFungi) {
         super(200, 0, hasFungi);
         this.packID = packID;
         hasPack = false;
-        lookForPackRadius = 1;
         wolfPack = new ArrayList<>();
-        this.packs = Pack.getInstance();
+        this.thisWolfsPack = Pack.getInstance();
     }
 
 
@@ -53,17 +52,21 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
             findPack();
         }
 
-        createBurrowIfDoesntHaveBurrow(w);
-
-        //update pack
+        //update pack (must happen before any burrow logic that iterates the pack)
         if(hasPack) {
-            wolfPack = packs.getPack(this);
+            wolfPack = thisWolfsPack.getPack(this);
         }
+
+        createBurrowIfDoesntHaveBurrow(w);
 
         if (!isRemoved) {
             if(age(w)) {
-                packs.removeFromPack(this);
+                thisWolfsPack.removeFromPack(this);
                 killThisAnimal(w, true);
+                return;
+            }
+            if(this.sporeCount >= 10) {
+                killThisAnimal(w, true); //it doesnt matter if its small or large, since no carcass wil come
                 return;
             }
             
@@ -71,13 +74,12 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
 
             moveWithPack(w, currentLocation);
 
-
             //Wolf tries to hunt
             hunt(w);
 
             // when energy <= 10 it dies and is removed from the pack
             if (energy <= 10 && !isRemoved) {
-                packs.removeFromPack(this);
+                thisWolfsPack.removeFromPack(this);
                 killThisAnimal(w, true);
                 isRemoved = true;
             }
@@ -137,7 +139,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
 
     // finds the pack controller and adds itself to a pack
     public void findPack() {
-        packs.addToPack(this);
+        thisWolfsPack.addToPack(this);
         hasPack = true;
     }
 
@@ -150,11 +152,24 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
     }
 
     public void createBurrowIfDoesntHaveBurrow(World w) {
-        if(!hasBurrow && w.getNonBlocking(w.getLocation(this)) == null && r.nextInt(100) > 90) {
-            burrow = new WolfBurrow();
-            burrow.addWolf(this);
-            hasBurrow = true;
-            w.setTile(w.getLocation(this), burrow);
+        Location here = w.getLocation(this);
+        if (!hasBurrow && w.getNonBlocking(here) == null && r.nextInt(100) > 90) {
+            WolfBurrow newBurrow = new WolfBurrow(this.packID);
+
+            w.setTile(here, newBurrow);
+
+            newBurrow.addWolf(this);
+            this.burrow = newBurrow;
+            this.hasBurrow = true;
+
+            for (Wolf packMate : wolfPack) {
+                if (packMate == null) continue;
+                if (packMate.getPackID() != this.packID) continue;
+
+                newBurrow.addWolf(packMate);
+                packMate.burrow = newBurrow;
+                packMate.hasBurrow = true;
+            }
         }
     }
 }

@@ -12,12 +12,15 @@ public abstract class Animal {
     protected int energy;
     protected int totalEnergy;
     protected int age;
-    protected int dayCount = 0;
+    protected int dayCount;
     protected boolean hasFungi;
+    protected int sporeCount;
 
     protected Random r;
 
     public Animal(int energy, int age, boolean hasFungi) {
+        this.dayCount = 0;
+        this.sporeCount = 0;
         this.energy = energy;
         this.totalEnergy = energy;
         this.age = age;
@@ -26,7 +29,13 @@ public abstract class Animal {
         r = new Random();
     }
 
-    protected boolean age(World w) {
+
+    //return true if aged
+    public boolean age(World w) {
+
+        if(this.hasFungi) {
+            this.sporeCount++;
+        }
         dayCount++;
         if(dayCount >= 5) {
             this.age++;
@@ -36,7 +45,7 @@ public abstract class Animal {
             if (energy > totalEnergy) {
                 energy = totalEnergy;
             }
-            
+
             if (totalEnergy <= 10 || energy <= 10) {
                 return true;
             }
@@ -52,12 +61,12 @@ public abstract class Animal {
     ///----------movement----------
 
     //moves animal to a location
-    protected void move(World w, Location target) {
+    public void move(World w, Location target) {
         w.move(this, target);
     }
 
     //basic random movement
-    protected boolean moveRandomly(World w, Location currentLocation) {
+    public boolean moveRandomly(World w, Location currentLocation) {
         Set<Location> emptyNeighbours = w.getEmptySurroundingTiles(currentLocation);
 
         if (emptyNeighbours.isEmpty()) {
@@ -105,9 +114,7 @@ public abstract class Animal {
     protected void killThisAnimal(World w, boolean isLargeAnimal) {
 
         if(this.hasFungi) {
-            Location thisCurrentLocation = w.getLocation(this);
             w.delete(this);
-            w.setTile(thisCurrentLocation, new Carcass(isLargeAnimal, true));
         } else {
             Location thisCurrentLocation = w.getLocation(this);
             w.delete(this);
@@ -120,9 +127,11 @@ public abstract class Animal {
 
     public void setEnergy(int energy) {this.energy = energy;}
 
-    protected int getTotalEnergy() {return totalEnergy;}
+    public int getTotalEnergy() {return totalEnergy;}
 
     public void setTotalEnergy(int totalEnergy) {this.totalEnergy = totalEnergy;}
+
+    public int getAge() {return age;}
 
     public void printInfoAboutAnimalEveryStep() {
         System.out.println("Energy: " + energy + " Total Energy: " + totalEnergy + " Age: " + age + " entityType: " + this.getClass().getSimpleName());
