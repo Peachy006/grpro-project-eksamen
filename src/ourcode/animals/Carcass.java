@@ -39,10 +39,30 @@ public class Carcass implements DynamicDisplayInformationProvider, Actor {
     }
 
     public void removeCarcass(World w) {
+        if(w == null) return;
+
+        if (!w.contains(this) || !w.isOnTile(this)) return;
+
         Location l = w.getLocation(this);
         w.remove(this);
         if(this.hasFungi) {
-            w.setTile(l, new Fungi());
+            if(this.isLargeCarcass) {
+                w.setTile(l, new Fungi("large"));
+                return;
+            }
+            w.setTile(l, new Fungi("small"));
         }
+    }
+
+    public boolean isLargeCarcass() {
+        return this.isLargeCarcass;
+    }
+
+    public boolean hasFungi() {
+        return this.hasFungi;
+    }
+
+    public void setHasFungi(boolean hasFungi) {
+        this.hasFungi = hasFungi;
     }
 }

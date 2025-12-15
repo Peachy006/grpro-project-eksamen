@@ -30,7 +30,7 @@ public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProv
             if(this.age < 3) {
                 return new DisplayInformation(Color.ORANGE, "rabbit-fungi-small", true);
             }
-            return new DisplayInformation(Color.ORANGE, "rabbit-fungi", true);
+            return new DisplayInformation(Color.ORANGE, "rabbit-large-fungi", true);
         }
         if(this.age < 3) {
             return new DisplayInformation(Color.BLACK, "rabbit-small", true);
