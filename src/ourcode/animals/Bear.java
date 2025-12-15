@@ -19,13 +19,14 @@ public class Bear extends Predator implements Actor, DynamicDisplayInformationPr
     Set<Animal> trespassers;
 
 
-    public Bear() {
-        super(200,0);
+    public Bear(boolean hasFungi) {
+        super(200,0, hasFungi);
     }
 
 
     @Override
     public DisplayInformation getInformation() {
+        if(this.hasFungi) return new DisplayInformation(Color.ORANGE, "bear-fungi", true);
         return new DisplayInformation(Color.ORANGE, "bear", true);
     }
 
@@ -36,18 +37,24 @@ public class Bear extends Predator implements Actor, DynamicDisplayInformationPr
             return;
         }
 
+        //age returns true if dead
         if(age(w)) {
+            killThisAnimal(w, true);
             return;
         }
+
+        eatBerries(w);
+
         Location l = w.getLocation(this);
         if(territory != null) {
             this.trespassers = territory.getTrespassers();
         }
 
         if (energy <= 10) {
-            w.delete(this);
+            killThisAnimal(w, true);
             return;
         }
+
 
         // on spawn make list of territory
         if (!hasTerritory) {
@@ -72,24 +79,10 @@ public class Bear extends Predator implements Actor, DynamicDisplayInformationPr
 
     @Override
     public void hunt(World w) {
-
-        if(!w.contains(this) || !w.isOnTile(this)) {
-            return;
-        }
-
-        Set<Location> tiles = w.getSurroundingTiles(w.getLocation(this));
-        Set<Animal> nearbyPrey = w.getAll(Animal.class, tiles);
-
-        for (Animal target : nearbyPrey) {
-            if ( target instanceof Prey) {
-                super.hunt(w, target);
-            } else if (target instanceof Predator) {
-                super.attack(target);
-            }
-        }
+        interactWithNearbyAnimals(w, false); //the boolean is just if u want it to only interact once per step
     }
 
-   public void eat(World w) {
+   public void eatBerries(World w) {
        Location l = w.getLocation(this);
        Set<Location> neighbors = w.getSurroundingTiles(l);
        

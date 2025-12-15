@@ -80,7 +80,7 @@ public class ThemeOneTests {
     void RabbitGainsEnergyWhenEatingGrass() {
         Location testlocation = new Location(2, 2);
 
-        Rabbit rabbit = new Rabbit();
+        Rabbit rabbit = new Rabbit(false);
         rabbit.setEnergy(50);
 
         w.setTile(testlocation, rabbit);
@@ -113,7 +113,7 @@ public class ThemeOneTests {
         Map<Location, Integer> placementCounts = new HashMap<>();
 
         for (int i = 0; i < RabbitsPlaced; i++) {
-            Rabbit rabbit = new Rabbit();
+            Rabbit rabbit = new Rabbit(false);
 
             setElement(w, rabbit, size);
 
@@ -184,7 +184,7 @@ public class ThemeOneTests {
     @Test
     void DoesRabbitCreateBurrow() {
         Location start = new Location(2, 2);
-        Rabbit rabbit = new Rabbit();
+        Rabbit rabbit = new Rabbit(false);
         //Sets energy so Rabbit doesn't die and the test fails
         rabbit.setEnergy(5000);
 
@@ -221,8 +221,8 @@ public class ThemeOneTests {
         Location locationB = new Location(2, 3);
         Location locationC = new Location(3, 3);
 
-        Rabbit rabbitA = new Rabbit();
-        Rabbit rabbitB = new Rabbit();
+        Rabbit rabbitA = new Rabbit(false);
+        Rabbit rabbitB = new Rabbit(false);
 
         rabbitA.setAge(5);
         rabbitB.setAge(5);
@@ -256,7 +256,7 @@ public class ThemeOneTests {
     @Test
     void DoesRabbitDieWhenAging() {
         Location startLocation = new Location(2, 2);
-        Rabbit rabbit = new Rabbit();
+        Rabbit rabbit = new Rabbit(false);
 
         rabbit.setAge(9);
         rabbit.setDayCount(4);
@@ -272,8 +272,6 @@ public class ThemeOneTests {
         p.simulate();
 
         assertFalse(w.contains(rabbit));
-        assertTrue(w.isTileEmpty(startLocation));
-
     }
 
     @Test
@@ -370,7 +368,7 @@ public class ThemeOneTests {
         assertEquals(rabbitCount, actualRabbitCount);
     }
 
-    // --- Helper Methods ---
+    // -- Helper Methods
 
 
     public static void setElement(World w, Object o, int size) {
@@ -418,17 +416,17 @@ public class ThemeOneTests {
                 break;
             }
             case("rabbit"): {
-                entity = new Rabbit();
+                entity = new Rabbit(false);
                 isBlocking = true;
                 break;
             }
             case("wolf"): {
-                entity = new Wolf(1);
+                entity = new Wolf(1, false);
                 isBlocking = true;
                 break;
             }
             case("bear"): {
-                entity = new Bear();
+                entity = new Bear(false);
                 isBlocking = true;
                 break;
             }
@@ -468,17 +466,17 @@ public class ThemeOneTests {
                 break;
             }
             case("rabbit"): {
-                entity = new Rabbit();
+                entity = new Rabbit(false);
                 isBlocking = true;
                 break;
             }
             case("wolf"): {
-                entity = new Wolf(packID);
+                entity = new Wolf(packID, false);
                 isBlocking = true;
                 break;
             }
             case("bear"): {
-                entity = new Bear();
+                entity = new Bear(false);
                 isBlocking = true;
                 break;
             }

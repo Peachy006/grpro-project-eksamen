@@ -1,12 +1,9 @@
 
 import itumulator.executable.*;
 import ourcode.InputReader;
+import ourcode.animals.*;
 import ourcode.structures.Burrow;
-import ourcode.animals.Grass;
-import ourcode.animals.Rabbit;
-import ourcode.animals.Bear;
 import ourcode.plants.Bush;
-import ourcode.animals.Wolf;
 import itumulator.world.Location;
 import itumulator.world.World;
 
@@ -40,6 +37,8 @@ public class Main {
         Program p = new Program(size, display_size, delay);
         World w = p.getWorld();
 
+
+        //pack id for wolf
         int nextPackID = 1;
 
 
@@ -82,7 +81,7 @@ public class Main {
         boolean isBlocking = true;
 
 
-        switch(type) {
+        switch(type.trim().toLowerCase()) {
             case("grass"): {
                 entity = new Grass();
                 isBlocking = false;
@@ -94,17 +93,17 @@ public class Main {
                 break;
             }
             case("rabbit"): {
-                entity = new Rabbit();
+                entity = new Rabbit(false);//hasFungi
                 isBlocking = true;
                 break;
             }
             case("wolf"): {
-                entity = new Wolf(packID);
+                entity = new Wolf(packID, false);//hasFungi
                 isBlocking = true;
                 break;
             }
             case("bear"): {
-                entity = new Bear();
+                entity = new Bear(false);//hasFungi
                 isBlocking = true;
                 break;
             }
@@ -113,8 +112,28 @@ public class Main {
                 isBlocking = true;
                 break;
             }
+            case("carcass"): {
+                entity = new Carcass(true, false); //islargeCarcass, hasFungi
+                break;
+            }
+            case("cordyceps_rabbit"): {
+                entity = new Rabbit(true);//hasFungi
+                break;
+            }
+            case("cordyceps_wolf"): {
+                entity = new Wolf(packID, true);//hasFungi
+                break;
+            }
+            case("cordyceps_bear"): {
+                entity = new Bear(true); //hasFungi
+                break;
+            }
+            case("carcass_fungi"): {
+                entity = new Carcass(false, true);//islargeCarcass, hasFungi
+                break;
+            }
             default: {
-                System.out.println("Invalid entity type");
+                System.out.println("Invalid entity type" + type);
             }
         }
 

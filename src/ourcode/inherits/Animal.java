@@ -3,6 +3,8 @@ package ourcode.inherits;
 
 import itumulator.world.World;
 import itumulator.world.Location;
+import ourcode.animals.Carcass;
+
 import java.util.*;
 
 public abstract class Animal {
@@ -11,13 +13,15 @@ public abstract class Animal {
     protected int totalEnergy;
     protected int age;
     protected int dayCount = 0;
+    protected boolean hasFungi;
 
     protected Random r;
 
-    public Animal(int energy, int age) {
+    public Animal(int energy, int age, boolean hasFungi) {
         this.energy = energy;
         this.totalEnergy = energy;
         this.age = age;
+        this.hasFungi = hasFungi;
 
         r = new Random();
     }
@@ -34,7 +38,6 @@ public abstract class Animal {
             }
             
             if (totalEnergy <= 10 || energy <= 10) {
-                w.delete(this);
                 return true;
             }
         }
@@ -99,6 +102,19 @@ public abstract class Animal {
         return false;
     }
 
+    protected void killThisAnimal(World w, boolean isLargeAnimal) {
+
+        if(this.hasFungi) {
+            Location thisCurrentLocation = w.getLocation(this);
+            w.delete(this);
+            w.setTile(thisCurrentLocation, new Carcass(isLargeAnimal, true));
+        } else {
+            Location thisCurrentLocation = w.getLocation(this);
+            w.delete(this);
+            w.setTile(thisCurrentLocation, new Carcass(isLargeAnimal, false));
+        }
+    }
+
     ///----------get/set----------
     public int getEnergy() {return energy;}
 
@@ -107,4 +123,8 @@ public abstract class Animal {
     protected int getTotalEnergy() {return totalEnergy;}
 
     public void setTotalEnergy(int totalEnergy) {this.totalEnergy = totalEnergy;}
+
+    public void printInfoAboutAnimalEveryStep() {
+        System.out.println("Energy: " + energy + " Total Energy: " + totalEnergy + " Age: " + age + " entityType: " + this.getClass().getSimpleName());
+    }
 }

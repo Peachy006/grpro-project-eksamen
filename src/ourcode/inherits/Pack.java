@@ -32,7 +32,13 @@ public class Pack {
         }
     }
 
-    public void removeFromPack(Wolf w) {packs.get(w.getPackID()).remove(w);}
+    public void removeFromPack(Wolf w) {
+        if(packs.get(w.getPackID()).contains(w)) {
+            packs.get(w.getPackID()).remove(w);
+        } else {
+            System.out.println("Pack is trying to remove a wolf which is not in the list");
+        }
+    }
 
 
     public ArrayList<Wolf> getPack(Wolf w) {

@@ -9,6 +9,7 @@ import itumulator.world.World;
 import itumulator.executable.DisplayInformation;
 import ourcode.inherits.Predator;
 import ourcode.inherits.Prey;
+import ourcode.structures.WolfBurrow;
 
 import java.awt.Color;
 import java.util.*;
@@ -22,17 +23,20 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
     protected Random random = new Random();
 
     protected int packID;
+    protected boolean hasBurrow = false;
+    protected WolfBurrow burrow;
+    protected int intercourseDelayTimer = 0;
     protected Pack packs;
     protected ArrayList<Wolf> wolfPack;
     protected boolean hasPack;
     protected int lookForPackRadius; // controls how tight the pack is
 
-    public Wolf(int packID) {
-        super(200, 0);
+    public Wolf(int packID, boolean hasFungi) {
+        super(200, 0, hasFungi);
         this.packID = packID;
         hasPack = false;
         lookForPackRadius = 1;
-        wolfPack = new ArrayList<Wolf>();
+        wolfPack = new ArrayList<>();
         this.packs = Pack.getInstance();
     }
 
@@ -50,16 +54,21 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
             findPack();
         }
 
+        createBurrowIfDoesntHaveBurrow(w);
+
         //update pack
         if(hasPack) {
             wolfPack = packs.getPack(this);
         }
 
         if (!isRemoved) {
-            age(w);
+            if(age(w)) {
+                packs.removeFromPack(this);
+                killThisAnimal(w, true);
+                return;
+            }
             
             Location currentLocation = w.getLocation(this);
-
 
             moveWithPack(w, currentLocation);
 
@@ -70,7 +79,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
             // when energy <= 10 it dies and is removed from the pack
             if (energy <= 10 && !isRemoved) {
                 packs.removeFromPack(this);
-                w.delete(this);
+                killThisAnimal(w, true);
                 isRemoved = true;
             }
         }
@@ -111,25 +120,20 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         }
     }
 
-    // takes a random animal in its radius and ehter eats it or attacks it
+    // takes a random animal in its radius and either eats it or attacks it
     public void hunt(World w) {
-        Set<Location> tiles = w.getSurroundingTiles(w.getLocation(this));
-        Set<Animal> nearbyPrey = w.getAll(Animal.class, tiles);
+        interactWithNearbyAnimals(w, true);
+    }
 
-        //eats prey and attacks other preditors that isn't in its pack
-        for (Animal target : nearbyPrey) {
-            if (target instanceof Prey) {
-                super.hunt(w, target);
-                return;
-            } else if (target instanceof Wolf && ((Wolf) target).getPackID() != this.packID) {
-                super.attack(target);
-                return;
-            } else if (target instanceof Predator && !(target instanceof Wolf)) {
-                // Attack other predators that aren't wolves (like Bears)
-                super.attack(target);
-                return;
-            }
+    @Override
+    protected boolean canAttack(Animal target, World w) {
+        if (!super.canAttack(target, w)) return false;
+
+        // Wolves don't attack wolves in the same pack.
+        if (target instanceof Wolf otherWolf) {
+            return otherWolf.getPackID() != this.getPackID();
         }
+        return true;
     }
 
     // finds the pack controller and adds itself to a pack
@@ -144,5 +148,14 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
 
     public int getPackID() {
         return packID;
+    }
+
+    public void createBurrowIfDoesntHaveBurrow(World w) {
+        if(!hasBurrow && w.getNonBlocking(w.getLocation(this)) == null && r.nextInt(100) > 90) {
+            burrow = new WolfBurrow();
+            burrow.addWolf(this);
+            hasBurrow = true;
+            w.setTile(w.getLocation(this), burrow);
+        }
     }
 }

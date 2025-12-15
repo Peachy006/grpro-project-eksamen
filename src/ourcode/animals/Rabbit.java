@@ -19,12 +19,19 @@ public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProv
 
     private Location burrowLocation = null;
 
-    public Rabbit() {
-        super(150, 1);
+    public Rabbit(boolean hasFungi) {
+        super(150, 1, hasFungi);
     }
 
     @Override
     public DisplayInformation getInformation() {
+
+        if(hasFungi) {
+            if(this.age < 3) {
+                return new DisplayInformation(Color.ORANGE, "rabbit-fungi-small", true);
+            }
+            return new DisplayInformation(Color.ORANGE, "rabbit-fungi", true);
+        }
         if(this.age < 3) {
             return new DisplayInformation(Color.BLACK, "rabbit-small", true);
         }
@@ -44,7 +51,10 @@ public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProv
         //
         if(!isBurrowed && w.contains(this)) {
             //aging logic
-            age(w);
+            if(age(w)) {
+                killThisAnimal(w, false);
+                return;
+            }
             
             // Check if rabbit died from aging
             if(!w.contains(this)) {
@@ -91,7 +101,7 @@ public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProv
                 energy -= 10;
             } else {
                 if(w.contains(this))
-                    w.delete(this);
+                    killThisAnimal(w, false);
                 return;
             }
 
@@ -135,7 +145,7 @@ public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProv
 
                     if(!tempNeighbours.isEmpty()) {
                         ArrayList<Location> tempNeighboursList = new ArrayList<>(tempNeighbours);
-                        w.setTile(tempNeighboursList.get(r.nextInt(tempNeighboursList.size())), new Rabbit());
+                        w.setTile(tempNeighboursList.get(r.nextInt(tempNeighboursList.size())), new Rabbit(false));
                     }
                 }
             }

@@ -26,66 +26,76 @@ public class InputReader {
         }
         this.size = Integer.parseInt(s.trim());
 
-        Pattern rangePattern = Pattern.compile("(\\d+-\\d+)(?:\\s*\\((\\d+),(\\d+)\\))?");
-
-        Pattern singleAmountPattern = Pattern.compile("(\\d+)(?:\\s*\\((\\d+),(\\d+)\\))?");
-
+        // Pattern:
+        // ^\\s* - start, optional whitespace
+        // ([a-z]+\\s+)? - optional prefix word (like "cordyceps" or "carcass") followed by space
+        // ([a-z]+) - entity type (like "rabbit", "wolf", "fungi")
+        // \\s+ - required space/spaces
+        // ((\\d+-\\d+|\\d+) - amount (either range 1-5 or single 3)
+        // (?:\\s*\\((\\d+),(\\d+)\\))? - optional location coordinates like (2,3)
+        // \\s*$ - optional trailing whitespace, end
+        Pattern linePattern = Pattern.compile("^\\s*([a-z]+\\s+)?([a-z]+)\\s+((\\d+-\\d+|\\d+)(?:\\s*\\((\\d+),(\\d+)\\))?)\\s*$");
 
         while ((s = br.readLine()) != null) {
-            s = s.trim();
-            if (s.isEmpty()) {
+            String originalLine = s.trim();
+            if (originalLine.isEmpty()) {
                 continue;
             }
 
-            String[] lineParts = s.split("\\s+", 2);
-            if (lineParts.length != 2) {
+            Matcher matcher = linePattern.matcher(originalLine);
+
+            if (!matcher.matches()) {
+                System.err.println("Warning: Skipping malformed line specification: " + originalLine);
                 continue;
             }
 
-            String entityType = lineParts[0];
-            String specification = lineParts[1];
+            // Group 1 is the optional prefix (with trailing space), Group 2 is the entity type
+            String prefix = matcher.group(1);
+            String entityType = matcher.group(2);
 
-            ArrayList<Integer> amountList = null;
+            // If a prefix exists (like "cordyceps " or "carcass "), prepend it to the entityType
+            // to make a unique configuration key, eg. cordyceps_rabbit"
+            if (prefix != null) {
+                prefix = prefix.trim(); // Remove the trailing space
+                entityType = prefix + "_" + entityType;
+            }
+
+            //group 4 is the amount/range string
+            String amountRangeStr = matcher.group(4);
+
+            //group 5 and 6 are the optional location coordinates
+            String xStr = matcher.group(5);
+            String yStr = matcher.group(6);
+
+            // debug output
+            System.out.println("Read the following: " + entityType + " with amount: " + amountRangeStr);
+
+
+            ArrayList<Integer> amountList = new ArrayList<>();
             Location spawnLoc = null;
 
-            Matcher rangeMatcher = rangePattern.matcher(specification);
-
-            if (rangeMatcher.matches()) {
-
-                String range = rangeMatcher.group(1);
-                String[] rangeParts = range.split("-");
-
-                amountList = new ArrayList<>();
+            // parse amount or range
+            if (amountRangeStr.contains("-")) {
+                // case range: (example: 1-5)
+                String[] rangeParts = amountRangeStr.split("-");
                 amountList.add(Integer.parseInt(rangeParts[0]));
                 amountList.add(Integer.parseInt(rangeParts[1]));
-
-                if (rangeMatcher.group(2) != null && rangeMatcher.group(3) != null) {
-                    int x = Integer.parseInt(rangeMatcher.group(2));
-                    int y = Integer.parseInt(rangeMatcher.group(3));
-                    spawnLoc = new Location(x, y);
-                }
-
             } else {
-                Matcher amountMatcher = singleAmountPattern.matcher(specification);
-
-                if (amountMatcher.matches()) {
-                    amountList = new ArrayList<>();
-                    amountList.add(Integer.parseInt(amountMatcher.group(1)));
-
-                    if (amountMatcher.group(2) != null && amountMatcher.group(3) != null) {
-                        int x = Integer.parseInt(amountMatcher.group(2));
-                        int y = Integer.parseInt(amountMatcher.group(3));
-                        spawnLoc = new Location(x, y);
-                    }
-                } else {
-                    System.err.println("Warning: Skipping malformed line specification: " + s);
-                    continue;
-                }
+                // case single amount: (example: 3)
+                amountList.add(Integer.parseInt(amountRangeStr));
             }
 
+            // --- Parse Location ---
+            if (xStr != null && yStr != null) {
+                int x = Integer.parseInt(xStr);
+                int y = Integer.parseInt(yStr);
+                spawnLoc = new Location(x, y);
+            }
+
+            // --- Create and Store Config ---
             EntityConfig config = new EntityConfig(amountList, spawnLoc);
 
-            // Add to list instead of replacing
+            // Add to lit instead of replacing
             if (!configMap.containsKey(entityType)) {
                 configMap.put(entityType, new ArrayList<>());
             }
