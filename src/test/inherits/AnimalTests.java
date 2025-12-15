@@ -82,4 +82,40 @@ public class AnimalTests {
 
     }
 
+    @Test
+    void TestMoveTowardsMethod() {
+        Location startLocation = new Location(5, 5);
+        Location endLocation = new Location(8, 6);
+
+        Rabbit rabbit = new Rabbit(false);
+        w.setTile(startLocation, rabbit);
+
+        Location expectedBestLocation = new Location(6, 6);
+
+        boolean moved = rabbit.moveTowards(w, startLocation, endLocation);
+        assertTrue(moved);
+        Location newLocation = w.getLocation(rabbit);
+
+        assertEquals(expectedBestLocation, newLocation);
+        assertNull(w.getTile(startLocation));
+
+    }
+
+
+    @Test
+    void TestKillThisAnimalMethod() {
+        Location startLocation = new Location(5, 5);
+        Rabbit rabbit = new Rabbit(false);
+        w.setTile(startLocation, rabbit);
+
+        assertNotNull(w.getLocation(rabbit));
+
+        rabbit.killThisAnimal(w,false);
+        assertNull(w.getLocation(rabbit));
+        assertNull(w.getTile(startLocation));
+
+    }
+
+    //Missing test of get/set methods in Animal. Not needed.
+
 }
