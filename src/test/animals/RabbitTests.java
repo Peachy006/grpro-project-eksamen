@@ -1,4 +1,4 @@
-package Test.animals;
+package test.animals;
 
 public class RabbitTests {
 }

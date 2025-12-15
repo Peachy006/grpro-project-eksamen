@@ -1,4 +1,4 @@
-package Test.inherits;
+package test.inherits;
 
 public class AnimalTests {
 }

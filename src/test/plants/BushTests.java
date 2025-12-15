@@ -1,4 +1,4 @@
-package Test.plants;
+package test.plants;
 
 public class BushTests {
 }

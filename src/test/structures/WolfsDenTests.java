@@ -1,4 +1,4 @@
-package Test.structures;
+package test.structures;
 
 public class WolfsDenTests {
 }
