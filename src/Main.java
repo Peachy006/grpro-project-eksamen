@@ -17,6 +17,8 @@ import java.util.Random;
 
 public class Main {
 
+    //hi mikkel
+
     //TODO make sure that wolves can mate in burrows
     //TODO check over theme 3
 
