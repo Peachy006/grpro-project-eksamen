@@ -16,6 +16,10 @@ public class WolfBurrow implements Actor, NonBlocking, DynamicDisplayInformation
     public int packIdForBurrow;
     Set<Wolf> wolvesInBurrow = new HashSet<>();
 
+    public WolfBurrow(int packIdForBurrow) {
+        this.packIdForBurrow = packIdForBurrow;
+    }
+
     @Override
     public DisplayInformation getInformation() {
         return new DisplayInformation(Color.RED, "hole");
