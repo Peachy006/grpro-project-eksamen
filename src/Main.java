@@ -16,6 +16,8 @@ import java.util.Random;
 
 public class Main {
 
+    //TODO make sure that wolves can mate in burrows
+    //TODO check over theme 3
 
     //The default size for burrows is set here, this can be changed based on who makes the burrow, but when a burrow is spawned by file it will be set to large as defualt
     static String burrowDefaultSize = "small";
