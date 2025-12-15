@@ -12,10 +12,6 @@ import project.structures.WolfBurrow;
 
 import java.awt.Color;
 import java.util.*;
-// todo: worlf hule
-// todo: add pack
-// todo: reproduve in hule
-// todo: class
 
 public class Wolf extends Predator implements Actor, DynamicDisplayInformationProvider {
     protected boolean isRemoved = false;
@@ -24,11 +20,12 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
     protected int packID;
     protected boolean hasBurrow = false;
     protected WolfBurrow burrow;
-    protected int intercourseDelayTimer = 0;
+    protected int intercourseDelayTimer = 8; //ticks for delay of mating
     protected Pack thisWolfsPack;
     protected ArrayList<Wolf> wolfPack;
     protected boolean hasPack;
     protected int lookForPackRadius = 1; // controls how tight the pack is
+    protected Wolf matingPartner = null;
 
     public Wolf(int packID, boolean hasFungi) {
         super(200, 0, hasFungi);
@@ -47,6 +44,12 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
 
     @Override
     public void act(World w) {
+
+        this.intercourseDelayTimer--;
+        
+        if(!w.contains(this)) return;
+        
+        boolean hasMovedThisTurn = false;
         // if wolf does not have a pack find one
         if(!hasPack) {
             findPack();
@@ -56,7 +59,6 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         if(hasPack) {
             wolfPack = thisWolfsPack.getPack(this);
         }
-
         createBurrowIfDoesntHaveBurrow(w);
 
         if (!isRemoved) {
@@ -71,8 +73,17 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
             }
             
             Location currentLocation = w.getLocation(this);
+            if (!hasMovedThisTurn && intercourseDelayTimer <= 0) {
+                hasMovedThisTurn = checkForMating(w);
+                if (hasMovedThisTurn) return;
+            }
+            
+            
+            if(!hasMovedThisTurn) {
+                hasMovedThisTurn = moveWithPack(w, currentLocation);
+            }
 
-            moveWithPack(w, currentLocation);
+
 
             //Wolf tries to hunt
             hunt(w);
@@ -87,25 +98,31 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
     }
 
     // picks a random wolf and ether moves towards it or randomly around it
-    public void moveWithPack(World w, Location currentLocation) {
+    public boolean moveWithPack(World w, Location currentLocation) {
         boolean moved = false;
 
         // if there are wolf's in pack
         if (!wolfPack.isEmpty()) {
 
             //pick a random wolf's location from the pack
+            
             Wolf targetWolf = wolfPack.get(random.nextInt(wolfPack.size()));
-            Location targetWolfL = w.getLocation(targetWolf);
+
+            while(!w.contains(targetWolf)) {
+                targetWolf = wolfPack.get(random.nextInt(wolfPack.size()));
+            }
+
+            Location targetWolfLocation = w.getLocation(targetWolf);
 
             //get target wolfs radius as locations
-            Set<Location> locations = w.getSurroundingTiles(targetWolfL, lookForPackRadius);
+            Set<Location> locations = w.getSurroundingTiles(targetWolfLocation, lookForPackRadius);
 
             if  (locations.contains(currentLocation)) { // if wolf is in target wolfs radius move randomly
                 if (moveRandomly(w, currentLocation)) {
                     moved = true;
                 }
             } else { // else try and move towards target wolf
-                if (moveTowards(w, currentLocation, targetWolfL)) {
+                if (moveTowards(w, currentLocation, targetWolfLocation)) {
                     moved = true;
                 }
             }
@@ -118,7 +135,9 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         // if it moved succesfully decrees energy
         if (moved){
             energy -= 10;
+            return true;
         }
+        return false;
     }
 
     // takes a random animal in its radius and either eats it or attacks it
@@ -149,6 +168,53 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
 
     public int getPackID() {
         return packID;
+    }
+
+    public boolean checkForMating(World w) {
+        if (w == null || !w.contains(this) || !w.isOnTile(this)) return false;
+        if (this.matingPartner != null) return false;
+
+        Location myLoc = w.getLocation(this);
+        Set<Location> neighbors = w.getSurroundingTiles(myLoc);
+
+        WolfBurrow nearbyOwnBurrow = null;
+        for (Location loc : neighbors) {
+            Object nb = w.getNonBlocking(loc);
+            if (nb instanceof WolfBurrow b && b.packIdForBurrow == this.packID) {
+                nearbyOwnBurrow = b;
+                break;
+            }
+        }
+        if (nearbyOwnBurrow == null) return false;
+
+        Wolf mate = null;
+        for (Location loc : neighbors) {
+            Object tile = w.getTile(loc);
+            if (tile instanceof Wolf other
+                    && other != this
+                    && other.getPackID() == this.packID
+                    && other.matingPartner == null) {
+                mate = other;
+                break;
+            }
+        }
+        if (mate == null) return false;
+
+        this.matingPartner = mate;
+        mate.matingPartner = this;
+
+        // Register the mating in the burrow (burrow will spawn after 5 steps
+        nearbyOwnBurrow.startMating(this, mate);
+
+        // remove from pack list to avoid stale references to deleted wolves
+        thisWolfsPack.removeFromPack(this);
+        thisWolfsPack.removeFromPack(mate);
+
+        // go down the hole
+        w.delete(this);
+        w.delete(mate);
+        this.intercourseDelayTimer = 8;
+        return true;
     }
 
     public void createBurrowIfDoesntHaveBurrow(World w) {
