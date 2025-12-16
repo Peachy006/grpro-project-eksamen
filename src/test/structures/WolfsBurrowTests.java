@@ -6,6 +6,9 @@ import project.animals.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import project.structures.WolfBurrow;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class WolfsBurrowTests {
     private Program program;
@@ -37,13 +40,22 @@ public class WolfsBurrowTests {
         world.setTile(new Location(0,0),wolf1);
         world.setTile(new Location(1,0),wolf2);
 
-        world.setTile(new Location(4,4),wolf3);
-        world.setTile(new Location(3,4),wolf1);
+        world.setTile(new Location(3,3),wolf3);
+        world.setTile(new Location(2,3),wolf4);
+
+        wolf1.findPack();
+        wolf2.findPack();
+
+        assertEquals(wolf1.getPackID(),wolf2.getPackID(), "packID:" + wolf1.getPackID());
+
+        while (wolf1.getBurrow() == null){
+            wolf1.createBurrowIfDoesntHaveBurrow(world);
+        }
 
         program.simulate();
 
-        while (!world.containsNonBlocking(world.getLocation(wolf1))) {
-            wolf1.createBurrowIfDoesntHaveBurrow(world);
-        }
+        assertNotNull(wolf1.getBurrow());
+        assertNotNull(wolf2.getBurrow());
+
     }
 }

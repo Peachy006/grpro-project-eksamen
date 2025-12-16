@@ -8,6 +8,7 @@ import itumulator.world.Location;
 import itumulator.world.World;
 import itumulator.executable.DisplayInformation;
 import project.inherits.Predator;
+import project.structures.Burrow;
 import project.structures.WolfBurrow;
 
 import java.awt.Color;
@@ -251,7 +252,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         }
     }
 
-    public Location getBurrowLocation(World w) {
-        return w.getLocation(this);
+    public WolfBurrow getBurrow() {
+        return burrow;
     }
 }
