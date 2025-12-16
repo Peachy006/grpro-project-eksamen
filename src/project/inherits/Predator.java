@@ -42,7 +42,7 @@ public abstract class Predator extends Animal {
         }
     }
 
-    protected void attack(Animal target) {
+    public void attack(Animal target) {
         int targetEnergy = target.getEnergy();
         int dmg = r.nextInt(20);
 
@@ -89,7 +89,7 @@ public abstract class Predator extends Animal {
         return acted;
     }
 
-    protected boolean canEat(Animal target, World w) {
+    public boolean canEat(Animal target, World w) {
         return target instanceof Prey;
     }
 
