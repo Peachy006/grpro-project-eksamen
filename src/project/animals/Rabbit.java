@@ -26,17 +26,18 @@ public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProv
 
     @Override
     public DisplayInformation getInformation() {
+        boolean small = this.age < 3;
 
-        if(hasFungi) {
-            if(this.age < 3) {
-                return new DisplayInformation(Color.ORANGE, "rabbit-fungi-small", true);
-            }
-            return new DisplayInformation(Color.ORANGE, "rabbit-large-fungi", true);
+        String key;
+        if (hasFungi) {
+            key = small ? "rabbit-fungi-small" : "rabbit-large-fungi";
+        } else {
+            key = small ? "rabbit-small" : "rabbit-large";
         }
-        if(this.age < 3) {
-            return new DisplayInformation(Color.BLACK, "rabbit-small", true);
-        }
-        return new DisplayInformation(Color.BLACK, "rabbit-large", true);
+
+        if (isAsleep) key += "-sleeping";
+
+        return new DisplayInformation(Color.BLACK, key, true);
     }
 
     public Location getBurrowLocation() {

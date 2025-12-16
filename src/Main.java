@@ -136,6 +136,10 @@ public class Main {
                 entity = new Carcass(false, true);//islargeCarcass, hasFungi
                 break;
             }
+            case("scorpion"): {
+                entity = new Scorpion();
+                break;
+            }
             default: {
                 System.out.println("Invalid entity type" + type);
             }
