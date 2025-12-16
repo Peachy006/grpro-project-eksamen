@@ -229,7 +229,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
     }
 
     public void createBurrowIfDoesntHaveBurrow(World w) {
-        if(!w.contains(this) || w.isOnTile(this)) return;
+        if(!w.contains(this) || !w.isOnTile(this)) return;
         Location here = w.getLocation(this);
         if (!hasBurrow && w.getNonBlocking(here) == null && r.nextInt(100) > 90) {
             WolfBurrow newBurrow = new WolfBurrow(this.packID);
