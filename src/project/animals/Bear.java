@@ -33,6 +33,11 @@ public class Bear extends Predator implements Actor, DynamicDisplayInformationPr
     @Override
     public void act(World w) {
 
+        // on spawn make list of territory
+        if (!hasTerritory) {
+            super.makeTerritory(w);
+        }
+
         if(!w.contains(this)) {
             return;
         }
@@ -53,12 +58,6 @@ public class Bear extends Predator implements Actor, DynamicDisplayInformationPr
         if (energy <= 10) {
             killThisAnimal(w, true);
             return;
-        }
-
-
-        // on spawn make list of territory
-        if (!hasTerritory) {
-            super.makeTerritory(w);
         }
 
         // if its hungry start hunting
