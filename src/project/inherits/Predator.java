@@ -19,7 +19,7 @@ public abstract class Predator extends Animal {
         hasTerritory = false;
     }
 
-    protected void makeTerritory(World w) {
+    public void makeTerritory(World w) {
         this.territory = new Territory(w, this);
         hasTerritory = true;
     }
@@ -52,7 +52,7 @@ public abstract class Predator extends Animal {
     }
 
 
-    protected final boolean interactWithNearbyAnimals(World w, boolean stopAfterFirstAction) {
+    public final boolean interactWithNearbyAnimals(World w, boolean stopAfterFirstAction) {
         if (!w.contains(this) || !w.isOnTile(this)) return false;
 
         Set<Location> neighbours = w.getSurroundingTiles(w.getLocation(this));
@@ -106,7 +106,7 @@ public abstract class Predator extends Animal {
      //decide if this predator can attack this target
      // default: can attack other predators (not itself)
 
-    protected boolean canAttack(Animal target, World w) {
+    public boolean canAttack(Animal target, World w) {
         return target instanceof Predator && target != this;
     }
 
