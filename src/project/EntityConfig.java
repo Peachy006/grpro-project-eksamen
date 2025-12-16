@@ -1,4 +1,4 @@
-package itumulator.executable;
+package project;
 
 import itumulator.world.Location;
 

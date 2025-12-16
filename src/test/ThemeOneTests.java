@@ -1,7 +1,7 @@
 package test;
 
 import itumulator.executable.DisplayInformation;
-import itumulator.executable.EntityConfig;
+import project.EntityConfig;
 import itumulator.executable.Program;
 import itumulator.world.Location;
 import itumulator.world.World;

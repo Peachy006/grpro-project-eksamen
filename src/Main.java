@@ -1,5 +1,6 @@
 
 import itumulator.executable.*;
+import project.EntityConfig;
 import project.InputReader;
 import project.animals.*;
 import project.plants.Grass;
