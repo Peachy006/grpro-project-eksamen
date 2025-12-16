@@ -157,7 +157,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
     }
 
     @Override
-    protected boolean canAttack(Animal target, World w) {
+    public boolean canAttack(Animal target, World w) {
         if (!super.canAttack(target, w)) return false;
 
         // Wolves don't attack wolves in the same pack.
