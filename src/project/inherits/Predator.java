@@ -52,7 +52,7 @@ public abstract class Predator extends Animal {
     }
 
 
-    public final boolean interactWithNearbyAnimals(World w, boolean stopAfterFirstAction) {
+        public final boolean interactWithNearbyAnimals(World w, boolean stopAfterFirstAction) {
         if (!w.contains(this) || !w.isOnTile(this)) return false;
 
         Set<Location> neighbours = w.getSurroundingTiles(w.getLocation(this));
