@@ -5,7 +5,9 @@ import itumulator.world.Location;
 import itumulator.world.World;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import project.animals.Carcass;
 import project.animals.Rabbit;
+import project.inherits.Animal;
 
 import java.awt.*;
 
@@ -111,8 +113,12 @@ public class AnimalTests {
         assertNotNull(w.getLocation(rabbit));
 
         rabbit.killThisAnimal(w,false);
-        assertNull(w.getLocation(rabbit));
-        assertNull(w.getTile(startLocation));
+
+
+        Object caracass = w.getTile(startLocation);
+        assertNotNull(caracass);
+        assertTrue(caracass instanceof Carcass);
+        assertFalse(w.getTile(startLocation)instanceof Animal);
 
     }
 
