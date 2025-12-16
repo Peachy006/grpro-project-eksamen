@@ -41,5 +41,9 @@ public class WolfsBurrowTests {
         world.setTile(new Location(3,4),wolf1);
 
         program.simulate();
+
+        while (!world.containsNonBlocking(world.getLocation(wolf1))) {
+            wolf1.createBurrowIfDoesntHaveBurrow(world);
+        }
     }
 }
