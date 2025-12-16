@@ -25,8 +25,9 @@ public class Bear extends Predator implements Actor, DynamicDisplayInformationPr
 
     @Override
     public DisplayInformation getInformation() {
-        if(this.hasFungi) return new DisplayInformation(Color.ORANGE, "bear-fungi", true);
-        return new DisplayInformation(Color.ORANGE, "bear", true);
+        String key = hasFungi ? "bear-fungi" : "bear";
+        if (isAsleep) key += "-sleeping";
+        return new DisplayInformation(Color.ORANGE, key, true);
     }
 
     @Override

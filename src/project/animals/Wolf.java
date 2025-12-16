@@ -38,7 +38,18 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
 
     @Override
     public DisplayInformation getInformation() {
-        return new DisplayInformation(Color.DARK_GRAY, "wolf", true);
+        boolean small = this.age < 3;
+
+        String key;
+        if (hasFungi) {
+            key = small ? "wolf-fungi-small" : "wolf-fungi";
+        } else {
+            key = small ? "wolf-small" : "wolf";
+        }
+
+        if (isAsleep) key += "-sleeping";
+
+        return new DisplayInformation(Color.DARK_GRAY, key, true);
     }
 
 
@@ -211,13 +222,14 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         thisWolfsPack.removeFromPack(mate);
 
         // go down the hole
-        w.delete(this);
-        w.delete(mate);
+        w.remove(this);
+        w.remove(mate);
         this.intercourseDelayTimer = 8;
         return true;
     }
 
     public void createBurrowIfDoesntHaveBurrow(World w) {
+        if(!w.contains(this) || w.isOnTile(this)) return;
         Location here = w.getLocation(this);
         if (!hasBurrow && w.getNonBlocking(here) == null && r.nextInt(100) > 90) {
             WolfBurrow newBurrow = new WolfBurrow(this.packID);

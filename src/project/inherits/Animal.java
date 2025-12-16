@@ -15,6 +15,8 @@ public abstract class Animal {
     protected int dayCount;
     protected boolean hasFungi;
     protected int sporeCount;
+    public boolean isAsleep = false;
+    int wakingUpCounter = 0;
 
     protected Random r;
 
@@ -32,6 +34,13 @@ public abstract class Animal {
 
     //return true if aged
     public boolean age(World w) {
+
+        if(isAsleep) {
+            wakingUpCounter++;
+            if(wakingUpCounter <= 0) {
+                isAsleep = false;
+            }
+        }
 
         if(this.hasFungi) {
             this.sporeCount++;
@@ -83,6 +92,7 @@ public abstract class Animal {
 
     //pathfinding movement
     public boolean moveTowards(World w, Location currentLocation, Location targetLocation) {
+
         Set<Location> emptyNeighbours = w.getEmptySurroundingTiles(currentLocation);
 
         if (emptyNeighbours.isEmpty()) {
@@ -134,6 +144,8 @@ public abstract class Animal {
     public boolean hasFungi() { return hasFungi; }
 
     public int getAge() {return age;}
+
+    public void setAsleep(int amount) {isAsleep = true; wakingUpCounter = amount;}
 
     public void printInfoAboutAnimalEveryStep() {
         System.out.println("Energy: " + energy + " Total Energy: " + totalEnergy + " Age: " + age + " entityType: " + this.getClass().getSimpleName());
