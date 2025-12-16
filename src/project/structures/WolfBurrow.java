@@ -79,7 +79,6 @@ public class WolfBurrow implements Actor, NonBlocking, DynamicDisplayInformation
             world.setTile(bLoc, parentB);
             world.setTile(pupLoc, pup);
 
-            // Re-add to pack controller so pack logic doesn't keep dead references
             Pack pack = Pack.getInstance();
             pack.addToPack(parentA);
             pack.addToPack(parentB);
@@ -89,10 +88,6 @@ public class WolfBurrow implements Actor, NonBlocking, DynamicDisplayInformation
         }
     }
 
-    /**
-     * Register a mating pair that has "gone into" the burrow.
-     * Caller should delete both wolves from the world and remove them from Pack.
-     */
     public void startMating(Wolf a, Wolf b) {
         if (a == null || b == null) return;
         if (a.getPackID() != packIdForBurrow || b.getPackID() != packIdForBurrow) return;

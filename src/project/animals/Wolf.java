@@ -250,4 +250,8 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
             }
         }
     }
+
+    public Location getBurrowLocation(World w) {
+        return w.getLocation(this);
+    }
 }
