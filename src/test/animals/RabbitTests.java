@@ -1,27 +1,28 @@
 package test.animals;
 
-
 import itumulator.executable.*;
 import itumulator.world.*;
 import project.animals.*;
-
+import project.plants.*;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import project.structures.Burrow;
-import project.structures.WolfBurrow;
 
-import java.util.ArrayList;
-import java.util.Set;
+
+import java.util.HashMap;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RabbitTests {
-    private World w;
-    private Program p;
 
-    private Rabbit r1;
+public class RabbitTests {
+    private World world;
+    private Program program;
+
+    private Rabbit rabbit1;
+    private Rabbit rabbit2;
+
+    private Grass grass;
 
     @BeforeEach
     void setup() {
@@ -29,42 +30,101 @@ public class RabbitTests {
         int delay = 1000;
         int display_size = 800;
 
-        p = new Program(size, display_size, delay);
-        w = p.getWorld();
+        program = new Program(size, display_size, delay);
+        world = program.getWorld();
 
-        r1 = new Rabbit(false);
+        rabbit1 = new Rabbit(false);
+        rabbit2 = new Rabbit(false);
+
+        grass = new Grass();
     }
 
     @Test
-    void rabbitMoves() {
+    void doesRabbitMove() {
         Location r1L = new Location(0,0);
-        w.setTile(r1L, r1);
+        world.setTile(r1L, rabbit1);
 
-        p.simulate();
+        program.simulate();
 
-        assertTrue(w.isTileEmpty(r1L));
+        assertTrue(world.isTileEmpty(r1L));
     }
     @Test
-    void rabbitDies() {
-        w.setTile(new Location(0,0), r1);
+    void rabbitDiesOfOldAge() {
+        world.setTile(new Location(0,0), rabbit1);
 
-        r1.setEnergy(10);
+        rabbit1.setEnergy(5);
 
-        p.simulate();
+        program.simulate();
 
-        Set<Location> set = w.getSurroundingTiles(new Location(0,0));
+        HashMap<Object, Location> temp = (HashMap<Object, Location>) world.getEntities();
 
-        for (Location l : set) {
-            if (!w.isTileEmpty(l)) {
-                assertTrue(w.isTileEmpty(l));
-                break;
-            }
-        }
+        assertNull(temp.get(rabbit1));
     }
 
     @Test
     void rabbitBurrow() {
-        
+        boolean hasBurrow = false;
+
+        world.setTile(new Location(0,0), rabbit1);
+
+        world.setNight();
+
+        // make sure it makes a burrow lol
+        for (int i = 0; i < 500; i++) {
+            rabbit1.burrowLogic(world, world.getLocation(rabbit1));
+        }
+
+        // did rabbit make burrow?
+        assertNotNull(rabbit1.getBurrowLocation());
+
+        // let the rabbit get in its burrow
+        program.simulate();
+        program.simulate();
+
+        HashMap<Object, Location> temp = (HashMap<Object, Location>) world.getEntities();
+
+        // is rabbit in burrow?
+        assertNull(temp.get(rabbit1));
+    }
+
+    @Test
+    void doesRabbitEatGrass() {
+        boolean hasEatGrass = false;
+
+        Program tempProgram = new Program(1,1000,800);
+        World tempWorld =  tempProgram.getWorld();
+
+        tempWorld.setTile(new Location(0,0), rabbit1);
+        tempWorld.setTile(new Location(0,0), grass);
+
+        HashMap<Object, Location> temp = (HashMap<Object, Location>) world.getEntities();
+        for (int i = 0; i < 10; i++) {
+            if (temp.get(grass) == null) {
+                hasEatGrass = true;
+                break;
+            }
+        }
+
+        assertTrue(hasEatGrass);
+    }
+
+    @Test
+    void doesRabbitReproduce() {
+        world.setTile(new Location(0,0), rabbit1);
+        world.setTile(new Location(1,0), rabbit2);
+
+        rabbit1.setAge(5);
+        rabbit2.setAge(5);
+
+        rabbit1.reproduce(world);
+
+        HashMap<Object, Location> temp = (HashMap<Object, Location>) world.getEntities();
+        int counter = 0;
+        for (Location l : temp.values()) {
+            counter++;
+        }
+
+        assertEquals(3, counter);
     }
 
 }
