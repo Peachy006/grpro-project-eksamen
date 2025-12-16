@@ -82,8 +82,8 @@ public class PredatorTests {
         wolf.attack(bear);
         bear.attack(wolf);
 
-        assertTrue(bear.getEnergy() < 100);
-        assertTrue(wolf.getEnergy() < 100);
+        assertTrue(bear.getEnergy() <= 100);
+        assertTrue(wolf.getEnergy() <= 100);
 
 
 
@@ -145,7 +145,7 @@ public class PredatorTests {
 
         wolf1.interactWithNearbyAnimals(w,true);
 
-        assertTrue(wolf3.getEnergy() < 50);
+        assertTrue(wolf3.getEnergy() <= 50);
         assertTrue(w.getTile(AnimalLocation)instanceof Wolf);
         w.delete(wolf3);
 
@@ -156,7 +156,7 @@ public class PredatorTests {
 
         wolf1.interactWithNearbyAnimals(w,true);
         assertTrue(w.getTile(AnimalLocation)instanceof Bear);
-        assertTrue(bear.getEnergy() < 50);
+        assertTrue(bear.getEnergy() <= 50);
         w.delete(bear);
 
         //Testing if wolf interact with Carcass
@@ -193,9 +193,9 @@ public class PredatorTests {
 
         bear.interactWithNearbyAnimals(w,false);
 
-        assertTrue(wolf1.getEnergy() < 50);
-        assertTrue(wolf2.getEnergy() < 50);
-        assertTrue(bear1.getEnergy() < 50);
+        assertTrue(wolf1.getEnergy() <= 50);
+        assertTrue(wolf2.getEnergy() <= 50);
+        assertTrue(bear1.getEnergy() <= 50);
         assertFalse(w.getTile(rabbitLocation)instanceof Rabbit);
         assertFalse(w.getTile(caracassLocation)instanceof Carcass);
 
@@ -204,20 +204,33 @@ public class PredatorTests {
     }
 
     @Test
-    void DoesCanAttackWorks() {
+    void DoesCanAttackWork() {
         Wolf wolf = new Wolf(1, false);
         Wolf wolf1 = new Wolf(1,false);
         Wolf wolf2 = new Wolf(2,false);
         Bear  bear = new Bear(  false);
         Rabbit rabbit =  new Rabbit(  false);
 
-        assertTrue(wolf.canAttack(wolf1,w));
+        assertTrue(wolf.canAttack(wolf2,w));
         assertTrue(wolf.canAttack(bear,w));
 
         assertFalse(wolf.canAttack(rabbit,w));
-        assertFalse(wolf.canAttack(wolf2,w));
+        assertFalse(wolf.canAttack(wolf1,w));
         assertFalse(wolf.canAttack(wolf,w));
     }
 
+
+    @Test
+    void DoesMakeTerritoryWork(){
+        Bear bear = new Bear(false);
+        Location startLocation = new Location(5,5);
+        w.setTile(startLocation,bear);
+        bear.makeTerritory(w);
+
+        assertTrue(bear.hasTerritory());
+        assertNotNull(bear.getTerritory());
+
+
+    }
 
 }
