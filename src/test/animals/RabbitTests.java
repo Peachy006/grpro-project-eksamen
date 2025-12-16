@@ -62,32 +62,6 @@ public class RabbitTests {
     }
 
     @Test
-    void rabbitBurrow() {
-        boolean hasBurrow = false;
-
-        world.setTile(new Location(0,0), rabbit1);
-
-        world.setNight();
-
-        // make sure it makes a burrow lol
-        for (int i = 0; i < 500; i++) {
-            rabbit1.burrowLogic(world, world.getLocation(rabbit1));
-        }
-
-        // did rabbit make burrow?
-        assertNotNull(rabbit1.getBurrowLocation());
-
-        // let the rabbit get in its burrow
-        program.simulate();
-        program.simulate();
-
-        HashMap<Object, Location> temp = (HashMap<Object, Location>) world.getEntities();
-
-        // is rabbit in burrow?
-        assertNull(temp.get(rabbit1));
-    }
-
-    @Test
     void doesRabbitEatGrass() {
         boolean hasEatGrass = false;
 
@@ -125,6 +99,35 @@ public class RabbitTests {
         }
 
         assertEquals(3, counter);
+    }
+
+    @Test
+    void isRabbitRemovedAndNotReset() {
+        world.setTile(new Location(0,0), rabbit1);
+        rabbit1.setAge(2);
+
+        world.setNight();
+
+        while(rabbit1.getBurrowLocation() == null){
+            rabbit1.burrowLogic(world, world.getLocation(rabbit1));
+        }
+
+        assertNotNull(world.getLocation(rabbit1));
+        assertEquals(new Location(0,0), rabbit1.getBurrowLocation());
+
+        program.simulate();
+        program.simulate();
+
+        HashMap<Object, Location> temp = (HashMap<Object, Location>) world.getEntities();
+
+        assertNull(temp.get(rabbit1));
+
+        world.setDay();
+
+        program.simulate();
+        program.simulate();
+
+        assertEquals(2,rabbit1.getAge());
     }
 
 }
