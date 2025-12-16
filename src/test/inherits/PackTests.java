@@ -29,6 +29,7 @@ public class PackTests {
 
     // This test, test all relevant methods in Pack
     // It doesn't test if there are wolves with different pack ID's
+    //IMPORTANT! You need to run test in PackTests in isolation because of PackGetInstance logic
     @Test
     void TestAllPackMethods () {
 
