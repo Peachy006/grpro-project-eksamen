@@ -27,7 +27,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException{
 
-        String path = "resources/Week-4/t4-1a.txt";
+        String path = "resources/Week-3/tf3-3ab.txt";
 
     //TODO check over theme 3
 
