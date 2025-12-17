@@ -122,7 +122,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
 
         while (attempts < wolfPack.size()) {
             Wolf potentialTarget = wolfPack.get(random.nextInt(wolfPack.size()));
-            if (potentialTarget != this && w.contains(targetWolf) && w.isOnTile(potentialTarget)) {
+            if (potentialTarget != this && w.isOnTile(potentialTarget)) {
                 targetWolf = potentialTarget;
                 break;
             }
