@@ -7,6 +7,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import project.animals.Bear;
+import project.animals.Wolf;
+import project.inherits.Animal;
 
 import java.util.Set;
 
@@ -43,7 +45,7 @@ public class TerritoryTests {
         assertTrue(territory.contains(new Location(5, 6)));
         assertTrue(territory.contains(new Location(9, 9)));
 
-        //Proof that i doesn't counter the center
+        //Proof that it doesn't count the center
         assertFalse(territory.contains(new Location(5, 5)));
 
         assertFalse(territory.contains(new Location(0, 5)));
@@ -51,3 +53,4 @@ public class TerritoryTests {
     }
 }
 
+}
