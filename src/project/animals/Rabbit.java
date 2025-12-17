@@ -186,10 +186,6 @@ public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProv
         }
     }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-
     public void setDayCount(int dayCount) {
         this.dayCount = dayCount;
     }

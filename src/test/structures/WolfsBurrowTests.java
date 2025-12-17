@@ -21,7 +21,7 @@ public class WolfsBurrowTests {
 
     @BeforeEach
     void setUp() {
-        int size = 4;
+        int size = 2;
         int delay = 1000;
         int display_size = 800;
 
@@ -40,11 +40,7 @@ public class WolfsBurrowTests {
         world.setTile(new Location(0,0),wolf1);
         world.setTile(new Location(1,0),wolf2);
 
-        world.setTile(new Location(3,3),wolf3);
-        world.setTile(new Location(2,3),wolf4);
-
-        wolf1.findPack();
-        wolf2.findPack();
+        program.simulate();
 
         assertEquals(wolf1.getPackID(),wolf2.getPackID(), "packID:" + wolf1.getPackID());
 
@@ -55,7 +51,31 @@ public class WolfsBurrowTests {
         program.simulate();
 
         assertNotNull(wolf1.getBurrow());
-        assertNotNull(wolf2.getBurrow());
+        assertNotNull(wolf2.getBurrow(), "wolf2 did not resive burrow");
+        assertEquals(wolf1.getBurrow(), wolf2.getBurrow());
+    }
 
+    @Test
+    void DoesWolfsGoInDen() {
+        world.setTile(new Location(0,0),wolf1);
+        world.setTile(new Location(1,0),wolf2);
+
+        wolf1.setAge(3);
+        wolf2.setAge(3);
+
+        program.simulate();
+
+        while (wolf1.getBurrow() == null){
+            wolf1.createBurrowIfDoesntHaveBurrow(world);
+        }
+
+        program.simulate();
+
+        while (world.contains(wolf1) && world.contains(wolf2)) {
+            program.simulate();
+        }
+
+        assertNull(world.getLocation(wolf1));
+        assertNull(world.getLocation(wolf2));
     }
 }

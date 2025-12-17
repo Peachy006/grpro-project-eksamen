@@ -145,6 +145,10 @@ public abstract class Animal {
 
     public int getAge() {return age;}
 
+    public void setAge(int age) {
+        this.age = age;
+    }
+
     public void setAsleep(int amount) {isAsleep = true; wakingUpCounter = amount;}
 
     public void printInfoAboutAnimalEveryStep() {

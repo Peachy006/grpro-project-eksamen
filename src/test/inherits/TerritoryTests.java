@@ -48,11 +48,6 @@ public class TerritoryTests {
 
         assertFalse(territory.contains(new Location(0, 5)));
         assertFalse(territory.contains(new Location(5, 15)));
-
-
     }
-
-    @Test
-    void moveInTerritory
 }
 
