@@ -6,11 +6,11 @@ import project.animals.*;
 
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import project.structures.WolfBurrow;
+
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,15 +39,15 @@ public class WolfTests {
         w.setTile(wolfL, wolf);
         w.setTile(rabbitL, rabbit);
 
-        wolf.setEnergy(350);
+        wolf.setEnergy(150);
         wolf.hunt(w);
 
         // if the rabbit is not on tile assume it's been eaten
         assertTrue(w.isTileEmpty(rabbitL));
 
         // did it gain energy from the rabbit
-        assertNotEquals(350, wolf.getEnergy());
-        assertEquals(400, wolf.getEnergy());
+        assertNotEquals(150, wolf.getEnergy());
+        assertEquals(200, wolf.getEnergy());
     }
 
     @Test
@@ -110,15 +110,39 @@ public class WolfTests {
     @Test
     void testWolfFindsPack() {
         Wolf wolf1 = new Wolf(1, false);
-        Wolf wolf2 = new Wolf(2, false);
+        Wolf wolf2 = new Wolf(1, false);
 
         wolf1.findPack();
-        wolf2.findPack();
 
-        wolf1.findPack();
-        wolf2.findPack();
+        p.simulate();
 
         assertEquals(1, wolf2.getPackID());
-        assertEquals(2, wolf2.getPackID());
+        assertEquals(1, wolf2.getPackID());
+    }
+
+    @Test
+    void doesWolfReproduce() {
+        Wolf wolf1 = new Wolf(1, false);
+        Wolf wolf2 = new Wolf(1, false);
+
+        w.setTile(new Location(0, 0), wolf1);
+        w.setTile(new Location(1, 0), wolf2);
+
+        wolf1.findPack();
+        wolf2.findPack();
+
+        wolf1.createBurrowIfDoesntHaveBurrow(w);
+
+
+        HashMap<Object, Location> temp = (HashMap<Object, Location>) w.getEntities();
+       for (int i = 0; i < 10; i++){
+            p.simulate();
+            temp = (HashMap<Object, Location>) w.getEntities();
+            if (temp.size() == 3){
+                break;
+            }
+        }
+
+        assertEquals(3, temp.size());
     }
 }
