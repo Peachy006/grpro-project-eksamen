@@ -207,6 +207,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
             if (tile instanceof Wolf other
                     && other != this
                     && other.getPackID() == this.packID
+                    && other.isAsleep == false
                     && other.matingPartner == null) {
                 mate = other;
                 break;
@@ -217,7 +218,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         this.matingPartner = mate;
         mate.matingPartner = this;
 
-        // Register the mating in the burrow (burrow will spawn after 5 steps
+
         nearbyOwnBurrow.startMating(this, mate);
 
         // remove from pack list to avoid stale references to deleted wolves
