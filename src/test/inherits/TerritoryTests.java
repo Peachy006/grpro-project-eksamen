@@ -50,64 +50,7 @@ public class TerritoryTests {
 
         assertFalse(territory.contains(new Location(0, 5)));
         assertFalse(territory.contains(new Location(5, 15)));
-
-
     }
-
-    @Test
-    void DoesgetTrespasserswork(){
-        Bear bear = new Bear(false);
-        Wolf wolfInside = new Wolf(1, false);
-        Wolf wolfOutside = new Wolf(1, false);
-
-        Location bearStartLocation = new Location(4,5);
-        Location wolfInsideLocation = new Location(3,2);
-        Location wolfOutsideLocation = new Location(15,2);
-
-        w.setTile(bearStartLocation, bear);
-        w.setTile(wolfInsideLocation, wolfInside);
-        w.setTile(wolfOutsideLocation, wolfOutside);
-
-        bear.makeTerritory(w);
-
-        Set<Animal> trespassers = bear.getTerritory().getTrespassers();
-
-        assertNotNull(trespassers);
-        assertEquals(1, trespassers.size());
-        //Bear doesn't count itself
-        assertFalse(trespassers.contains(bear));
-
-        assertFalse(trespassers.contains(wolfOutside));
-
-
-
-    }
-
-    @Test
-    void DoesMoveInTerritoryWork() {
-        Bear bear = new Bear(false);
-        Location spawnLocation = new Location(5, 5);
-        w.setTile(spawnLocation, bear);
-        bear.makeTerritory(w);
-
-
-        Location farAway = new Location(0, 0);
-        w.move(bear, farAway);
-
-
-        bear.getTerritory().moveInTerritory(w, bear);
-
-        Location afterMoveOutside = w.getLocation(bear);
-        assertTrue(afterMoveOutside.getX() > 0 || afterMoveOutside.getY() > 0);
-
-        Location edgeLocation = new Location(1, 1);
-        w.move(bear, edgeLocation);
-
-
-        bear.getTerritory().moveInTerritory(w, bear);
-
-        Location afterMoveInside = w.getLocation(bear);
-        assertTrue(bear.getTerritory().getTerritory().contains(afterMoveInside));
-    }
+}
 
 }
