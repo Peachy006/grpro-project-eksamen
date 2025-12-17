@@ -76,6 +76,7 @@ public abstract class Animal {
 
     //basic random movement
     public boolean moveRandomly(World w, Location currentLocation) {
+        if(isAsleep) return false;
         Set<Location> emptyNeighbours = w.getEmptySurroundingTiles(currentLocation);
 
         if (emptyNeighbours.isEmpty()) {
@@ -92,7 +93,7 @@ public abstract class Animal {
 
     //pathfinding movement
     public boolean moveTowards(World w, Location currentLocation, Location targetLocation) {
-
+        if(isAsleep) return false;
         Set<Location> emptyNeighbours = w.getEmptySurroundingTiles(currentLocation);
 
         if (emptyNeighbours.isEmpty()) {

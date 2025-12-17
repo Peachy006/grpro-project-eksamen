@@ -53,7 +53,8 @@ public abstract class Predator extends Animal {
 
 
         public final boolean interactWithNearbyAnimals(World w, boolean stopAfterFirstAction) {
-        if (!w.contains(this) || !w.isOnTile(this)) return false;
+            if(isAsleep) return false;
+            if (!w.contains(this) || !w.isOnTile(this)) return false;
 
         Set<Location> neighbours = w.getSurroundingTiles(w.getLocation(this));
         Set<Animal> nearbyAnimals = w.getAll(Animal.class, neighbours);
