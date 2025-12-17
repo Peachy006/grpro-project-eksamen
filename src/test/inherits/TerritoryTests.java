@@ -108,6 +108,18 @@ public class TerritoryTests {
 
         Location afterMoveInside = w.getLocation(bear);
         assertTrue(bear.getTerritory().getTerritory().contains(afterMoveInside));
+
+        Location trap = new Location(4, 5);
+        w.move(bear, trap);
+
+        for (Location l : w.getSurroundingTiles(trap)){
+            w.setTile(l, new Wolf(1,false));
+        }
+
+        bear.getTerritory().moveInTerritory(w, bear);
+
+        assertEquals(trap,w.getLocation(bear));
+
     }
 
 }
