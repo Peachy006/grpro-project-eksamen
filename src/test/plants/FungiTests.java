@@ -19,11 +19,12 @@ public class FungiTests {
     private Fungi fungi1;
 
     Carcass carcass1;
+    Carcass carcass2;
 
 
     @BeforeEach
     void setUp() {
-        int size = 2;
+        int size = 4;
         int delay = 1000;
         int display_size = 800;
 
@@ -32,6 +33,7 @@ public class FungiTests {
 
         fungi1 = new Fungi("large");
         carcass1 = new Carcass(true,false);
+        carcass2 = new Carcass(true,false);
     }
 
     @Test
@@ -67,5 +69,20 @@ public class FungiTests {
         }
 
         assertEquals(2, count);
+    }
+
+    @Test
+    void doesFungiSpreadFromCarcassToCarcass() {
+        world.setTile(new Location(0,0), fungi1);
+        world.setTile(new Location(2,2), carcass1);
+        world.setTile(new Location(3,3), carcass2);
+
+        fungi1.lookForOtherCarcassesToSpreadTo(world);
+
+        assertTrue(carcass1.hasFungi());
+
+        program.simulate();
+
+        assertTrue(carcass2.hasFungi());
     }
 }
