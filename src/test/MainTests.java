@@ -1,6 +1,5 @@
 package test;
 
-import itumulator.executable.DisplayInformation;
 import project.EntityConfig;
 import itumulator.executable.Program;
 import itumulator.world.Location;
@@ -8,13 +7,11 @@ import itumulator.world.World;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import project.InputReader;
-import project.animals.Bear;
+import project.animals.*;
+import project.plants.Bush;
 import project.structures.Burrow;
-import project.animals.Rabbit;
-import project.animals.Wolf;
 import project.plants.Grass;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +20,7 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ThemeOneTests {
+public class MainTests {
 
     private Program p;
     private World w;
@@ -168,6 +165,12 @@ public class ThemeOneTests {
         int rabbitCount = 0;
         int bearCount = 0;
         int bushCount = 0;
+        int carcassCount = 0;
+        int scorpionCount = 0;
+        int cordycepsRabbitCount = 0;
+        int cordycepsWolfCount = 0;
+        int cordycepsBearCount = 0;
+        int carcassFungiCount = 0;
 
         Program p = new Program(reader.getSize(), 800, 1000);
         World w = p.getWorld();
@@ -207,13 +210,31 @@ public class ThemeOneTests {
                     case "bear":
                         bearCount += spawnCount;
                         break;
-                    case "bush":
+                    case "berry":
                         bushCount += spawnCount;
+                        break;
+                    case "scorpion":
+                        scorpionCount += spawnCount;
+                        break;
+                    case "carcass":
+                        carcassCount += spawnCount;
+                        break;
+                    case "cordyceps_rabbit":
+                        cordycepsRabbitCount += spawnCount;
+                        break;
+                    case "cordyceps_wolf":
+                        cordycepsWolfCount += spawnCount;
+                        break;
+                    case "cordyceps_bear":
+                        cordycepsBearCount += spawnCount;
+                        break;
+                    case "carcass_fungi":
+                        carcassFungiCount += spawnCount;
                         break;
 
                 }
                 for (int i = 0; i < spawnCount; i++) {
-                    createAndPlaceElement(w, type, information.getSpawnLocation(), reader.getSize());
+                    createAndPlaceElement(w, type, information.getSpawnLocation(), reader.getSize(),1);
                 }
             }
         }
@@ -226,6 +247,13 @@ public class ThemeOneTests {
         int actualBearCount = 0;
         int actualBushCount = 0;
         int actualRabbitCount = 0;
+        int actualCarcassCount = 0;
+        int actualScorpionCount = 0;
+        int actualCordycepsRabbitCount = 0;
+        int actualCordycepsWolfCount = 0;
+        int actualCordycepsBearCount = 0;
+        int actualCarcassFungiCount = 0;
+
 
         for (int x = 0; x < w.getSize(); x++) {
             for (int y = 0; y < w.getSize(); y++) {
@@ -235,13 +263,32 @@ public class ThemeOneTests {
                     Object entity = w.getNonBlocking(l);
                     if (entity instanceof Grass) actualGrassCount++;
                     if (entity instanceof Burrow) actualBurrowCount++;
-                    // if (entity instanceof Bush)  actualBushCount++;
+                    if (entity instanceof Carcass carcass) {
+                        if (carcass.hasFungi()) actualCarcassFungiCount++;
+                        else actualCarcassCount++;
+                    }
                 }
+
                 if (!w.isTileEmpty(l)) {
                     Object entity = w.getTile(l);
-                    if (entity instanceof Wolf) actualWolfCount++;
-                    if (entity instanceof Rabbit) actualRabbitCount++;
-                    if (entity instanceof Bear) actualBearCount++;
+                    if (entity instanceof Bush) actualBushCount++;
+                    if (entity instanceof Scorpion) actualScorpionCount++;
+
+                    if (entity instanceof Wolf wolf) {
+                        if (wolf.hasFungi()) actualCordycepsWolfCount++;
+                        else actualWolfCount++;
+                    }
+
+                    if (entity instanceof Rabbit rabbit){
+                        if (rabbit.hasFungi()) actualCordycepsRabbitCount++;
+                        else actualRabbitCount++;
+                    }
+
+                    if (entity instanceof Bear bear) {
+                        if (bear.hasFungi()) actualBearCount++;
+                        else actualBearCount++;
+                    }
+
                 }
             }
         }
@@ -252,6 +299,13 @@ public class ThemeOneTests {
         assertEquals(bearCount, actualBearCount);
         assertEquals(bushCount, actualBushCount);
         assertEquals(rabbitCount, actualRabbitCount);
+        assertEquals(carcassCount, actualCarcassCount);
+        assertEquals(scorpionCount, actualScorpionCount);
+
+        assertEquals(cordycepsRabbitCount, actualCordycepsRabbitCount);
+        assertEquals(cordycepsWolfCount, actualCordycepsWolfCount);
+        assertEquals(cordycepsBearCount, actualCordycepsBearCount);
+        assertEquals(carcassFungiCount, actualCarcassFungiCount);
     }
 
 
@@ -262,7 +316,7 @@ public class ThemeOneTests {
         int initialEnitityCount = w.getEntities().size();
         Location specificLocation = null;
 
-        createAndPlaceElement(w, bearType, specificLocation, w.getSize());
+        createAndPlaceElement(w, bearType, specificLocation, w.getSize(),0);
         int actualBearCount = w.getEntities().size();
         assertEquals(initialEnitityCount + 1, actualBearCount);
 
@@ -291,12 +345,91 @@ public class ThemeOneTests {
     // --- Helper Methods ---
 
 
+    public static void createAndPlaceElement(World w, String type, Location specificLocation, int size, int packID) {
+
+        Object entity = null;
+        boolean isBlocking = true;
+
+
+        switch(type.trim().toLowerCase()) {
+            case("grass"): {
+                entity = new Grass();
+                isBlocking = false;
+                break;
+            }
+            case("burrow"): {
+                entity = new Burrow(burrowDefaultSize);
+                isBlocking = false;
+                break;
+            }
+            case("rabbit"): {
+                entity = new Rabbit(false);//hasFungi
+                isBlocking = true;
+                break;
+            }
+            case("wolf"): {
+                entity = new Wolf(packID, false);//hasFungi
+                isBlocking = true;
+                break;
+            }
+            case("bear"): {
+                entity = new Bear(false);//hasFungi
+                isBlocking = true;
+                break;
+            }
+            case("berry"): {
+                entity = new Bush();
+                isBlocking = true;
+                break;
+            }
+            case("carcass"): {
+                entity = new Carcass(true, false); //islargeCarcass, hasFungi
+                break;
+            }
+            case("cordyceps_rabbit"): {
+                entity = new Rabbit(true);//hasFungi
+                break;
+            }
+            case("cordyceps_wolf"): {
+                entity = new Wolf(packID, true);//hasFungi
+                break;
+            }
+            case("cordyceps_bear"): {
+                entity = new Bear(true); //hasFungi
+                break;
+            }
+            case("carcass_fungi"): {
+                entity = new Carcass(false, true);//islargeCarcass, hasFungi
+                break;
+            }
+            case("scorpion"): {
+                entity = new Scorpion();
+                break;
+            }
+            default: {
+                System.out.println("Invalid entity type" + type);
+            }
+        }
+
+        if(entity == null) return;
+        if(specificLocation != null) {
+            w.setTile(specificLocation, entity);
+        } else {
+            if(isBlocking) {
+                setElement(w, entity, size);
+            } else {
+                setNonBlockingElement(w, entity, size);
+            }
+        }
+    }
+
+
     public static void setElement(World w, Object o, int size) {
         Random r = new Random();
         int x = r.nextInt(size);
         int y = r.nextInt(size);
         Location l = new Location(x, y);
-        while (!w.isTileEmpty(l)) {
+        while(!w.isTileEmpty(l)) {
             x = r.nextInt(size);
             y = r.nextInt(size);
             l = new Location(x, y);
@@ -310,61 +443,11 @@ public class ThemeOneTests {
         int y = r.nextInt(size);
         Location l = new Location(x, y);
 
-        while (w.containsNonBlocking(l)) {
+        while(w.containsNonBlocking(l)) {
             x = r.nextInt(size);
             y = r.nextInt(size);
             l = new Location(x, y);
         }
         w.setTile(l, o);
-    }
-
-    public static void createAndPlaceElement(World w, String type, Location specificLocation, int size) {
-
-        Object entity = null;
-        boolean isBlocking = true;
-
-
-        switch (type) {
-            case ("grass"): {
-                entity = new Grass();
-                isBlocking = false;
-                break;
-            }
-            case ("burrow"): {
-                entity = new Burrow(burrowDefaultSize);
-                isBlocking = false;
-                break;
-            }
-            case ("rabbit"): {
-                entity = new Rabbit(false);
-                isBlocking = true;
-                break;
-            }
-            case ("wolf"): {
-                entity = new Wolf(1, false);
-                isBlocking = true;
-                break;
-            }
-            case ("bear"): {
-                entity = new Bear(false);
-                isBlocking = true;
-                break;
-            }
-
-            default: {
-                System.out.println("Invalid entity type");
-            }
-        }
-
-        if (entity == null) return;
-        if (specificLocation != null) {
-            w.setTile(specificLocation, entity);
-        } else {
-            if (isBlocking) {
-                setElement(w, entity, size);
-            } else {
-                setNonBlockingElement(w, entity, size);
-            }
-        }
     }
 }
