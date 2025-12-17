@@ -1,0 +1,8 @@
+10
+grass 5
+berry 2
+rabbit 3
+wolf 1
+scorpion 8
+carcass 2
+carcass fungi 2

@@ -1,0 +1,4 @@
+6
+grass 2
+scorpion 3
+bear 1

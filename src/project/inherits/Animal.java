@@ -36,7 +36,7 @@ public abstract class Animal {
     public boolean age(World w) {
 
         if(isAsleep) {
-            wakingUpCounter++;
+            wakingUpCounter--;
             if(wakingUpCounter <= 0) {
                 isAsleep = false;
             }

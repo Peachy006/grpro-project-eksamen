@@ -41,8 +41,9 @@ public class Scorpion extends Prey implements Actor, DynamicDisplayInformationPr
     public void sting(World w) {
         Set<Location> neighbours = w.getSurroundingTiles(w.getLocation(this));
         for(Location l : neighbours) {
-            if(w.getTile(l) instanceof Animal animal) {
-                animal.setAsleep(8);
+            if(w.getTile(l) instanceof Animal animal && !(w.getTile(l) instanceof Scorpion )) {
+                if(r.nextDouble() > 0.8)
+                    animal.setAsleep(8); //asleep for 8 ticks
             }
         }
     }

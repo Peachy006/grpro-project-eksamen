@@ -3,6 +3,7 @@ package project.inherits;
 import itumulator.world.Location;
 import itumulator.world.World;
 import project.animals.Carcass;
+import project.animals.Scorpion;
 
 import java.util.Set;
 
@@ -91,6 +92,7 @@ public abstract class Predator extends Animal {
     }
 
     public boolean canEat(Animal target, World w) {
+        if(target instanceof Scorpion) return false;
         return target instanceof Prey;
     }
 

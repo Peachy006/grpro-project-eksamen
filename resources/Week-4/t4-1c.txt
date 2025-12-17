@@ -1,0 +1,10 @@
+18
+grass 20
+berry 12
+rabbit 12
+wolf 4
+bear 2
+scorpion 3
+carcass 2
+cordyceps rabbit 1
+cordyceps wolf 1

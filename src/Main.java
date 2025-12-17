@@ -27,8 +27,9 @@ public class Main {
 
     public static void main(String[] args) throws IOException{
 
-        String path = "resources/week-2/test.txt";
+        String path = "resources/Week-4/t4-1a.txt";
 
+    //TODO check over theme 3
 
         InputReader reader = new InputReader(path);
 

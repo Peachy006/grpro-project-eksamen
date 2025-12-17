@@ -28,12 +28,13 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
     protected int lookForPackRadius = 1; // controls how tight the pack is
     protected Wolf matingPartner = null;
 
-    public Wolf(int packID, boolean hasFungi) {
+    public Wolf(int nextPackID, boolean hasFungi) {
         super(200, 0, hasFungi);
-        this.packID = packID;
+        this.packID = nextPackID;
         hasPack = false;
         wolfPack = new ArrayList<>();
         this.thisWolfsPack = Pack.getInstance();
+        this.packID = nextPackID;
     }
 
 
@@ -74,6 +75,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         createBurrowIfDoesntHaveBurrow(w);
 
         if (!isRemoved) {
+            if(!w.isOnTile(this) || !w.contains(this)) return;
             if(age(w)) {
                 thisWolfsPack.removeFromPack(this);
                 killThisAnimal(w, true);
@@ -111,45 +113,39 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
 
     // picks a random wolf and ether moves towards it or randomly around it
     public boolean moveWithPack(World w, Location currentLocation) {
-        boolean moved = false;
+        if (wolfPack.isEmpty()) {
+            return moveRandomly(w, currentLocation);
+        }
 
-        // if there are wolf's in pack
-        if (!wolfPack.isEmpty()) {
+        Wolf targetWolf = null;
+        int attempts = 0;
 
-            //pick a random wolf's location from the pack
-            
-            Wolf targetWolf = wolfPack.get(random.nextInt(wolfPack.size()));
-
-            while(!w.contains(targetWolf)) {
-                targetWolf = wolfPack.get(random.nextInt(wolfPack.size()));
+        while (attempts < wolfPack.size()) {
+            Wolf potentialTarget = wolfPack.get(random.nextInt(wolfPack.size()));
+            if (potentialTarget != this && w.isOnTile(potentialTarget)) {
+                targetWolf = potentialTarget;
+                break;
             }
+            attempts++;
+        }
 
+        if (targetWolf == null) {
+            return moveRandomly(w, currentLocation);
+        }
+
+        try {
             Location targetWolfLocation = w.getLocation(targetWolf);
-
-            //get target wolfs radius as locations
             Set<Location> locations = w.getSurroundingTiles(targetWolfLocation, lookForPackRadius);
 
-            if  (locations.contains(currentLocation)) { // if wolf is in target wolfs radius move randomly
-                if (moveRandomly(w, currentLocation)) {
-                    moved = true;
-                }
-            } else { // else try and move towards target wolf
-                if (moveTowards(w, currentLocation, targetWolfLocation)) {
-                    moved = true;
-                }
+            if (locations.contains(currentLocation)) {
+                return moveRandomly(w, currentLocation);
+            } else {
+                return moveTowards(w, currentLocation, targetWolfLocation);
             }
-        } else { // if no wolfs in pack just move randomly
-            if (moveRandomly(w, currentLocation)) {
-                moved = true;
-            }
+        } catch (IllegalArgumentException e) {
+            // fallback in case the wolf was removed between the check and the call
+            return moveRandomly(w, currentLocation);
         }
-
-        // if it moved succesfully decrees energy
-        if (moved){
-            energy -= 10;
-            return true;
-        }
-        return false;
     }
 
     // takes a random animal in its radius and either eats it or attacks it
@@ -251,6 +247,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
             }
         }
     }
+
 
     public WolfBurrow getBurrow() {
         return burrow;

@@ -30,6 +30,7 @@ public class Territory {
     // moves randomly in territory
     // if animal is outside its territory move twoards it
     public void moveInTerritory(World w, Animal thisAnimal) {
+        if(thisAnimal.hasFungi()) return;
         Location animalLocation = w.getLocation(thisAnimal);
 
         // If outside territory, move towards spawn location
