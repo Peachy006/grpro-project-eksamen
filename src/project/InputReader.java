@@ -27,12 +27,12 @@ public class InputReader {
 
         // Pattern:
         // ^\\s* - start, optional whitespace
-        // ([a-z]+\\s+)? - optional prefix word (like "cordyceps" or "carcass") followed by space
-        // ([a-z]+) - entity type (like "rabbit", "wolf", "fungi")
-        // \\s+ - required space/spaces
-        // ((\\d+-\\d+|\\d+) - amount (either range 1-5 or single 3)
-        // (?:\\s*\\((\\d+),(\\d+)\\))? - optional location coordinates like (2,3)
-        // \\s*$ - optional trailing whitespace, end
+        // ([a-z]+\\s+)? - optional prefix word
+        // ([a-z]+) - entity type
+        // \\s+ - required spaces
+        // ((\\d+-\\d+|\\d+) - amount
+        // (?:\\s*\\((\\d+),(\\d+)\\))? - optional location
+        // \\s*$ - optional whitespace
         Pattern linePattern = Pattern.compile("^\\s*([a-z]+\\s+)?([a-z]+)\\s+((\\d+-\\d+|\\d+)(?:\\s*\\((\\d+),(\\d+)\\))?)\\s*$");
 
         while ((s = br.readLine()) != null) {
@@ -48,21 +48,20 @@ public class InputReader {
                 continue;
             }
 
-            // Group 1 is the optional prefix (with trailing space), Group 2 is the entity type
             String prefix = matcher.group(1);
             String entityType = matcher.group(2);
 
-            // If a prefix exists (like "cordyceps " or "carcass "), prepend it to the entityType
-            // to make a unique configuration key, eg. cordyceps_rabbit"
+            //if a prefix excists, like cordyceps or in some cases its carcass, it will be connected with the other word,
+            //so you get like "cordyceps rabbit"
             if (prefix != null) {
                 prefix = prefix.trim(); // Remove the trailing space
                 entityType = prefix + "_" + entityType;
             }
 
-            //group 4 is the amount/range string
+            //amount range
             String amountRangeStr = matcher.group(4);
 
-            //group 5 and 6 are the optional location coordinates
+            //potential specific location
             String xStr = matcher.group(5);
             String yStr = matcher.group(6);
 
@@ -91,10 +90,10 @@ public class InputReader {
                 spawnLoc = new Location(x, y);
             }
 
-            // --- Create and Store Config ---
+            //store config
             EntityConfig config = new EntityConfig(amountList, spawnLoc);
 
-            // Add to lit instead of replacing
+            // Add it
             if (!configMap.containsKey(entityType)) {
                 configMap.put(entityType, new ArrayList<>());
             }
