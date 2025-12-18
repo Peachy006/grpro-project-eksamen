@@ -23,7 +23,7 @@ public class Bear extends Predator implements Actor, DynamicDisplayInformationPr
     }
 
 
-    @Override
+    @Override // building the string for displayInformation
     public DisplayInformation getInformation() {
         String key = hasFungi ? "bear-fungi" : "bear";
         if (isAsleep) key += "-sleeping";

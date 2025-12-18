@@ -122,6 +122,4 @@ public class AnimalTests {
 
     }
 
-    //Missing test of get/set methods in Animal. Not needed.
-
 }

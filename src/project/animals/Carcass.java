@@ -8,6 +8,7 @@ import itumulator.world.World;
 import project.plants.Fungi;
 
 import java.awt.*;
+import java.util.Random;
 
 public class Carcass implements DynamicDisplayInformationProvider, Actor {
 
@@ -26,15 +27,16 @@ public class Carcass implements DynamicDisplayInformationProvider, Actor {
         return new DisplayInformation(Color.BLACK, "carcass-small");
     }
 
-    public int getNutritionValue() {
-        return (age * 2) + 5;
-    }
-
     @Override
     public void act(World w) {
+        Random r = new Random();
         this.age--;
         if(this.age <= 0) {
             removeCarcass(w);
+        }
+
+        if(!this.hasFungi && r.nextDouble() > 0.93) {
+            this.hasFungi = true;
         }
     }
 
@@ -52,6 +54,10 @@ public class Carcass implements DynamicDisplayInformationProvider, Actor {
             }
             w.setTile(l, new Fungi("small"));
         }
+    }
+
+    public int getNutritionValue() {
+        return (age * 2) + 5;
     }
 
     public boolean isLargeCarcass() {

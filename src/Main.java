@@ -19,7 +19,11 @@ import java.util.Random;
 public class Main {
 
 
-    //TODO check over theme 3
+    //TODO skal svampe overleve når der er et carcass i nærheden den kan feede fra?
+    //Definitionen lyder: Svampe kan kun overleve, hvis der er andre ådsler den kan sprede sig til i
+    //nærheden. Er dette ikke tilfældet, vil svampen også dø efter lidt tid.
+    //TODO skal ulve specifikt søge efter dyr den kan spise?
+    //Definitionen lyder: Ulve jager andre dyr og spiser dem for at opnå energi.
 
     //The default size for burrows is set here, this can be changed based on who makes the burrow, but when a burrow is spawned by file it will be set to large as defualt
     static String burrowDefaultSize = "small";
@@ -29,7 +33,6 @@ public class Main {
 
         String path = "resources/Week-4/t4-2c.txt";
 
-    //TODO check over theme 3
 
         InputReader reader = new InputReader(path);
 
@@ -49,9 +52,11 @@ public class Main {
 
         //read input
 
-        for(String type : configMap.keySet()) {
+        for(String type : configMap.keySet()) { //loop through all the inputs
             ArrayList<EntityConfig> configurations = configMap.get(type);
+            //get the list of extra configs
 
+            //loop through the configs
             for(EntityConfig information : configurations) {
                 ArrayList<Integer> listOfAmount = information.getSpawnAmount();
 
@@ -66,7 +71,7 @@ public class Main {
                 for(int i = 0; i < spawnCount; i++) {
                     createAndPlaceElement(w, type, information.getSpawnLocation(), size, nextPackID);
                 }
-
+                //special case for handling wolves since the packID must increase per input
                 if(type.equals("wolf")) {
                     nextPackID++;
                 }

@@ -28,14 +28,12 @@ public class Scorpion extends Prey implements Actor, DynamicDisplayInformationPr
     }
 
     public Scorpion() {
-        super(30, 0, false);
+        super(40, 0, false);
     }
 
     @Override
     public void act(World w) {
         if(!w.contains(this)) return;
-        System.out.println("Energy for scorpion: " + energy);
-
         if(age(w)) {
             killThisAnimal(w, false);
             return;
