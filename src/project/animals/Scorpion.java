@@ -33,6 +33,8 @@ public class Scorpion extends Prey implements Actor, DynamicDisplayInformationPr
 
     @Override
     public void act(World w) {
+        if(!w.contains(this)) return;
+
         moveRandomly(w, w.getLocation(this));
         sting(w);
 
