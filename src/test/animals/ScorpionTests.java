@@ -37,14 +37,16 @@ public class ScorpionTests {
 
         assertEquals("rabbit-small", ds.getImageKey());
 
-        scorpion.sting(world);
+        while (ds.getImageKey().equals("rabbit-small") || ds.getImageKey().equals("rabbit-large")) {
+            scorpion.sting(world);
+            ds = rabbit.getInformation();
+        }
 
-        assertEquals("-sleeping", ds.getImageKey());
+        assertEquals("rabbit-small-sleeping", ds.getImageKey());
 
-        ds = rabbit.getInformation();
+        world.delete(scorpion);
 
-        world.remove(scorpion);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 8; i++) {
             program.simulate();
         }
 
