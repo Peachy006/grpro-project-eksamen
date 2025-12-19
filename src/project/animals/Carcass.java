@@ -14,7 +14,7 @@ public class Carcass implements DynamicDisplayInformationProvider, Actor {
 
     protected boolean isLargeCarcass;
     protected boolean hasFungi;
-    protected int age = 15;
+    protected int age = 15; // set age, here age just keeps track of lifespan
 
     public Carcass(boolean isLargeCarcass, boolean hasFungi) {
         this.isLargeCarcass = isLargeCarcass;
@@ -32,7 +32,7 @@ public class Carcass implements DynamicDisplayInformationProvider, Actor {
         Random r = new Random();
         this.age--;
         if(this.age <= 0) {
-            removeCarcass(w);
+            removeCarcass(w); // lifespan runs out
         }
 
         if(!this.hasFungi && r.nextDouble() > 0.93) {
@@ -40,6 +40,8 @@ public class Carcass implements DynamicDisplayInformationProvider, Actor {
         }
     }
 
+
+    //this handles removing the carcass, if the carcass has fungi then a fungi will be placed on the tile of the carcass
     public void removeCarcass(World w) {
         if(w == null) return;
 

@@ -33,22 +33,25 @@ public class Scorpion extends Prey implements Actor, DynamicDisplayInformationPr
 
     @Override
     public void act(World w) {
-        if(!w.contains(this)) return;
+        if(!w.contains(this)) return; //error handling
         if(age(w)) {
-            killThisAnimal(w, false);
+            killThisAnimal(w, false); //animal method
             return;
         }
 
         moveRandomly(w, w.getLocation(this));
-        sting(w);
+        sting(w); // sting method
 
     }
 
+
+    //checks for nearby animals and has a 20% chance to sting them, granted its not another scorpion
+    //because in our world, all scorpions are best friends
     public void sting(World w) {
         Set<Location> neighbours = w.getSurroundingTiles(w.getLocation(this));
         for(Location l : neighbours) {
             if(w.getTile(l) instanceof Animal animal && !(w.getTile(l) instanceof Scorpion )) {
-                if(r.nextDouble() > 0.8)
+                if(r.nextDouble() > 0.8) // 20% chance
                     animal.setAsleep(8); //asleep for 8 ticks
             }
         }
