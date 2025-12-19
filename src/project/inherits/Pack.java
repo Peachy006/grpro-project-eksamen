@@ -45,8 +45,8 @@ public class Pack {
         return packs.get(w.getPackID());
     }
 
-    // this method does so only one Packs class is instanciatede at a time
-    // when called as a static(it can be called upon wherever), it checks on weather this class exists
+    // this ensures only one "Packs" is created at a time
+    // when called as a static(it can be called upon wherever), it checks on whether this class already exists
     // if it dosnt it makes one, if it does it just returns the class
     public static Pack getInstance() {
         if (instance == null) {

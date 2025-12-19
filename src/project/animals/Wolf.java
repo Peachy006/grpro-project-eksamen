@@ -29,15 +29,16 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
     protected Wolf matingPartner = null;
 
     public Wolf(int nextPackID, boolean hasFungi) {
-        super(200, 0, hasFungi);
+        super(200, 0, hasFungi); // max energy and current energy for wolf
         this.packID = nextPackID;
         hasPack = false;
         wolfPack = new ArrayList<>();
-        this.thisWolfsPack = Pack.getInstance();
-        this.packID = nextPackID;
+        this.thisWolfsPack = Pack.getInstance(); //keep track of wolfpack, generates a new one if one doesnt exists for it
+        this.packID = nextPackID; //saves packID
     }
 
-
+    //builds string for displayinformation, ergo pushes "-sleeping" to the name if the animal is sleeping,
+    //saves us from a million if/else statements
     @Override
     public DisplayInformation getInformation() {
         boolean small = this.age < 3;
@@ -60,7 +61,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
 
         this.intercourseDelayTimer--;
         
-        if(!w.contains(this)) return;
+        if(!w.contains(this)) return; //errorhandling
         
         boolean hasMovedThisTurn = false;
         // if wolf does not have a pack find one
@@ -75,24 +76,29 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         createBurrowIfDoesntHaveBurrow(w);
 
         if (!isRemoved) {
-            if(!w.isOnTile(this) || !w.contains(this)) return;
-            if(age(w)) {
+            if(!w.isOnTile(this) || !w.contains(this)) return; //error handling
+            if(age(w)) { //age, if it returns true then the animal must die, handled here
                 thisWolfsPack.removeFromPack(this);
                 killThisAnimal(w, true);
                 return;
             }
+
+            //kill based on sporecount
             if(this.sporeCount >= 10) {
                 killThisAnimal(w, true); //it doesnt matter if its small or large, since no carcass wil come
                 return;
             }
-            
+
+
+            //mate and save as variable since it wont be moving this turn
             Location currentLocation = w.getLocation(this);
             if (!hasMovedThisTurn && intercourseDelayTimer <= 0) {
                 hasMovedThisTurn = checkForMating(w);
                 if (hasMovedThisTurn) return;
             }
             
-            
+
+            //other attempt at moving if other fails
             if(!hasMovedThisTurn) {
                 hasMovedThisTurn = moveWithPack(w, currentLocation);
             }
@@ -120,6 +126,9 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         Wolf targetWolf = null;
         int attempts = 0;
 
+        //this could be improved, but works, problem is that attempts could become wolfPack size without trying all wolves,
+        //worst case it just moves randomly.
+        //we had to do this since all other attemps returned large errors with different threads
         while (attempts < wolfPack.size()) {
             Wolf potentialTarget = wolfPack.get(random.nextInt(wolfPack.size()));
             try {
@@ -127,6 +136,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
                     targetWolf = potentialTarget;
                     break;
                 }
+                //if the other thing fails we just use the exception to move randomly, this is to avoid breaking anything with an exception
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
                 return moveRandomly(w, currentLocation);
@@ -159,6 +169,8 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         interactWithNearbyAnimals(w, true);
     }
 
+
+    //used to check for interactWithNearbyAnimals since we need to know what to attack
     @Override
     public boolean canAttack(Animal target, World w) {
         if (!super.canAttack(target, w)) return false;
@@ -184,6 +196,8 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         return packID;
     }
 
+
+    //some annoying mating logic, checks if there is a nearby burrow and a nearby wolf it can mate with
     public boolean checkForMating(World w) {
         if (w == null || !w.contains(this) || !w.isOnTile(this)) return false;
         if (this.matingPartner != null) return false;
@@ -202,6 +216,8 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         if (nearbyOwnBurrow == null) return false;
 
         Wolf mate = null;
+
+        //checks the other wolf and gives it a pattern variable
         for (Location loc : neighbors) {
             Object tile = w.getTile(loc);
             if (tile instanceof Wolf other
@@ -222,6 +238,7 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         nearbyOwnBurrow.startMating(this, mate);
 
         // remove from pack list to avoid stale references to deleted wolves
+        //removed for now, since other wolves would otherwise call it
         thisWolfsPack.removeFromPack(this);
         thisWolfsPack.removeFromPack(mate);
 
@@ -232,10 +249,12 @@ public class Wolf extends Predator implements Actor, DynamicDisplayInformationPr
         return true;
     }
 
+
+    //pretty simple, has a 6% chance to create a burrow if it doesnt have a burrow
     public void createBurrowIfDoesntHaveBurrow(World w) {
         if(!w.contains(this) || !w.isOnTile(this)) return;
         Location here = w.getLocation(this);
-        if (!hasBurrow && w.getNonBlocking(here) == null && r.nextInt(100) > 90) {
+        if (!hasBurrow && w.getNonBlocking(here) == null && r.nextInt(100) > 94) {
             WolfBurrow newBurrow = new WolfBurrow(this.packID);
 
             w.setTile(here, newBurrow);

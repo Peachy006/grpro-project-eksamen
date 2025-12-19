@@ -21,6 +21,8 @@ public class Burrow implements Actor, NonBlocking, DynamicDisplayInformationProv
         this.size = size;
     }
 
+
+    //this turned out to be less important, but this is so you can pass which size burrow you wanted.
     @Override
     public DisplayInformation getInformation() {
         // Optional: pass true for random orientation each render
@@ -36,6 +38,7 @@ public class Burrow implements Actor, NonBlocking, DynamicDisplayInformationProv
 
     @Override
     public void act(World w) {
+        //had to make a copy since it would be weird if we started removing rabbits from the set we are looping through as it would move the spaces.
         Set<Rabbit> rabbitsCopy = new HashSet<>(rabbits);
         for(Rabbit rabbit : rabbitsCopy) {
             if(!w.contains(rabbit)) {

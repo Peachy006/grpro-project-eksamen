@@ -50,6 +50,7 @@ public class Bear extends Predator implements Actor, DynamicDisplayInformationPr
 
         eatBerries(w);
 
+
         Location l = w.getLocation(this);
         if(territory != null) {
             this.trespassers = territory.getTrespassers();
@@ -81,6 +82,8 @@ public class Bear extends Predator implements Actor, DynamicDisplayInformationPr
         interactWithNearbyAnimals(w, false); //the boolean is just if u want it to only interact once per step
     }
 
+
+    //checks surrounding tiles for bushes, if the bush has berries then eat the berry
    public void eatBerries(World w) {
        Location l = w.getLocation(this);
        Set<Location> neighbors = w.getSurroundingTiles(l);

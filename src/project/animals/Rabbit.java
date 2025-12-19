@@ -16,6 +16,8 @@ public class Rabbit extends Prey implements Actor, DynamicDisplayInformationProv
 
     boolean isBurrowed = false;
     int IntercourseDelayTimer = 0;
+
+    //this was used in an attempt to make the rabbits first get removed from the world when they were on top of the burrow
     boolean aboutToGoDown = false;
 
     private Location burrowLocation = null;

@@ -26,7 +26,6 @@ public class Territory {
         this.territory = world.getSurroundingTiles(world.getLocation(animal),territorySize);
     }
 
-    /// move random movement code from animal but with territory
     // moves randomly in territory
     // if animal is outside its territory move twoards it
     public void moveInTerritory(World w, Animal thisAnimal) {

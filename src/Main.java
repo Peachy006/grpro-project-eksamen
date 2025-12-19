@@ -19,11 +19,6 @@ import java.util.Random;
 public class Main {
 
 
-    //TODO skal svampe overleve når der er et carcass i nærheden den kan feede fra?
-    //Definitionen lyder: Svampe kan kun overleve, hvis der er andre ådsler den kan sprede sig til i
-    //nærheden. Er dette ikke tilfældet, vil svampen også dø efter lidt tid.
-    //TODO skal ulve specifikt søge efter dyr den kan spise?
-    //Definitionen lyder: Ulve jager andre dyr og spiser dem for at opnå energi.
 
     //The default size for burrows is set here, this can be changed based on who makes the burrow, but when a burrow is spawned by file it will be set to large as defualt
     static String burrowDefaultSize = "small";
